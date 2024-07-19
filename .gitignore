@@ -42,3 +42,7 @@ assets/videos//*
 !assets/videos//*.js
 !assets/videos//*.ts
 public/_next-video
+
+# sql files
+*.sql
+**/*.sql
