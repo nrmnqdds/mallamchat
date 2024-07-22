@@ -17,26 +17,32 @@ jobs:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: nrmnqdds
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: 'Build Inventory Image'
-        run: |
-          docker build . --tag ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
-          docker push ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: debian
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/debian/docker-compose.yaml
+            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/ubuntu/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
             docker compose up --force-recreate --build -d tatabahasaly-webapp
             docker system prune -a -f
