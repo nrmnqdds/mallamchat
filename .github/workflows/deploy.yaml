@@ -35,7 +35,7 @@ jobs:
           username: debian
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /root/docker-compose.yml
+            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/debian/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
             docker compose up --force-recreate --build -d tatabahasaly-webapp
             docker image prune -a -f
