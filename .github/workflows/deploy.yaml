@@ -32,8 +32,8 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: root
-          password: ${{ secrets.SSH_PASS }}
+          username: debian
+          key: ${{ secrets.SSH_KEY }}
           script: |
             sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /root/docker-compose.yml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
