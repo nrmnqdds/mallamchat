@@ -1,0 +1,41 @@
+name: Deploy Images to VPS
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  push-store-image:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: '.'
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+
+      - name: 'Login to GitHub Container Registry'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: nrmnqdds
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: 'Build Inventory Image'
+        run: |
+          docker build . --tag ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+          docker push ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: root
+          password: ${{ secrets.SSH_PASS }}
+          script: |
+            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /root/docker-compose.yml
+            docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
+            docker compose up --force-recreate --build -d tatabahasaly-webapp
+            docker image prune -a -f
