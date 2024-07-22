@@ -1,6 +1,7 @@
 import { withNextVideo } from "next-video/process";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+
 	// For docker purpose
 	output: "standalone",
 
