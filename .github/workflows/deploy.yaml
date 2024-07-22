@@ -8,7 +8,9 @@ on:
 
 jobs:
   push-store-image:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2204
+
     defaults:
       run:
         working-directory: '.'
