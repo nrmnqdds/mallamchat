@@ -1,29 +1,31 @@
-import Database from "better-sqlite3";
-
-import { drizzle } from "drizzle-orm/better-sqlite3";
 import {
+	boolean,
 	integer,
+	pgTable,
 	primaryKey,
-	sqliteTable,
 	text,
-} from "drizzle-orm/sqlite-core";
+	timestamp,
+} from "drizzle-orm/pg-core";
+import { drizzle } from "drizzle-orm/postgres-js";
 import type { AdapterAccountType } from "next-auth/adapters";
+import postgres from "postgres";
 
-// const client = new Database("sqlite.db");
-const client = new Database("./db.sqlite");
-export const db = drizzle(client);
+const connectionString = process.env.DATABASE_URL!;
+const pool = postgres(connectionString, { max: 1 });
 
-export const users = sqliteTable("user", {
+export const db = drizzle(pool);
+
+export const users = pgTable("user", {
 	id: text("id")
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	name: text("name"),
 	email: text("email").notNull(),
-	emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+	emailVerified: timestamp("emailVerified", { mode: "date" }),
 	image: text("image"),
 });
 
-export const accounts = sqliteTable(
+export const accounts = pgTable(
 	"account",
 	{
 		userId: text("userId")
@@ -47,20 +49,20 @@ export const accounts = sqliteTable(
 	}),
 );
 
-export const sessions = sqliteTable("session", {
+export const sessions = pgTable("session", {
 	sessionToken: text("sessionToken").primaryKey(),
 	userId: text("userId")
 		.notNull()
 		.references(() => users.id, { onDelete: "cascade" }),
-	expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+	expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
-export const verificationTokens = sqliteTable(
+export const verificationTokens = pgTable(
 	"verificationToken",
 	{
 		identifier: text("identifier").notNull(),
 		token: text("token").notNull(),
-		expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+		expires: timestamp("expires", { mode: "date" }).notNull(),
 	},
 	(verificationToken) => ({
 		compositePk: primaryKey({
@@ -69,7 +71,7 @@ export const verificationTokens = sqliteTable(
 	}),
 );
 
-export const authenticators = sqliteTable(
+export const authenticators = pgTable(
 	"authenticator",
 	{
 		credentialID: text("credentialID").notNull().unique(),
@@ -80,9 +82,7 @@ export const authenticators = sqliteTable(
 		credentialPublicKey: text("credentialPublicKey").notNull(),
 		counter: integer("counter").notNull(),
 		credentialDeviceType: text("credentialDeviceType").notNull(),
-		credentialBackedUp: integer("credentialBackedUp", {
-			mode: "boolean",
-		}).notNull(),
+		credentialBackedUp: boolean("credentialBackedUp").notNull(),
 		transports: text("transports"),
 	},
 	(authenticator) => ({

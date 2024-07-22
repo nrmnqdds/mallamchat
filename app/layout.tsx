@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
@@ -19,8 +20,8 @@ export default async function RootLayout({
 }>) {
 	const session = await auth();
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body className={inter.className}>
+		<html lang="en" suppressHydrationWarning className="h-full bg-white">
+			<body className={cn(inter.className, "h-full")}>
 				<SessionProvider session={session}>{children}</SessionProvider>
 			</body>
 		</html>

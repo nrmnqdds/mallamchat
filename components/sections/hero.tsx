@@ -1,4 +1,4 @@
-import LOGO from "@/assets/images/_303807fd-2271-4459-8d9c-54a2d78bfa7b.png";
+import LOGO from "@/assets/images/tatabahasaly-logo.png";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export default function HeroSection() {
 								</p>
 								<div className="mt-10 flex items-center gap-x-6">
 									<Link
-										href="/dashboard"
+										href="/frasa-semula"
 										className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 									>
 										Go to app
