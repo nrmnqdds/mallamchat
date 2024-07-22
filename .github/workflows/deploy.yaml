@@ -33,10 +33,10 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
-          username: debian
+          username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/debian/docker-compose.yaml
+            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/ubuntu/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
             docker compose up --force-recreate --build -d tatabahasaly-webapp
             docker system prune -a -f
