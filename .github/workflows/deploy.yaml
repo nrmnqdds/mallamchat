@@ -18,16 +18,19 @@ jobs:
         uses: actions/checkout@main
 
       - name: 'Login to GitHub Container Registry'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: nrmnqdds
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: 'Build Inventory Image'
-        run: |
-          docker build . --tag ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
-          docker push ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
