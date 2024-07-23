@@ -2,11 +2,11 @@ import { mallam } from "@/lib/mallam";
 import type { NextRequest } from "next/server";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
 	const { input } = await request.json();
 
-	console.log("FrasaSemula: ", input);
 	const instruction = [
 		{
 			role: "system",
@@ -31,9 +31,7 @@ export async function POST(request: NextRequest) {
 			const reader = res.getReader();
 			let result;
 			while ((result = await reader.read()) && !result.done) {
-				controller.enqueue(
-					encoder.encode(`${JSON.stringify(result.value)}\n\n`),
-				);
+				controller.enqueue(encoder.encode(`${JSON.stringify(result.value)}\n`));
 			}
 
 			controller.close();
@@ -41,7 +39,6 @@ export async function POST(request: NextRequest) {
 	});
 
 	return new Response(customReadable, {
-		// Set the headers for Server-Sent Events (SSE)
 		headers: {
 			Connection: "keep-alive",
 			"Content-Encoding": "none",

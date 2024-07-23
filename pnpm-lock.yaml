@@ -20,6 +20,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.0(react-hook-form@7.52.1(react@18.3.1))
+      '@huggingface/inference':
+        specifier: ^2.8.0
+        version: 2.8.0
       '@radix-ui/react-avatar':
         specifier: ^1.1.0
         version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -39,8 +42,8 @@ importers:
         specifier: ^0.408.0
         version: 0.408.0(react@18.3.1)
       mallam:
-        specifier: ^1.0.38
-        version: 1.0.38
+        specifier: ^1.0.40
+        version: 1.0.40
       next:
         specifier: 14.2.5
         version: 14.2.5(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -641,6 +644,13 @@ packages:
     resolution: {integrity: sha512-bU0Gr4EepJ/EQsH/IwEzYLsT/PEj5C0ynLQ4m+GSHS+xKH4TfSelhluTgOaoc4kA5s7eCsQbM4wvZLzELmWzUg==}
     peerDependencies:
       react-hook-form: ^7.0.0
+
+  '@huggingface/inference@2.8.0':
+    resolution: {integrity: sha512-Ti681P1qckcCAqgzmL53jBnluPuZGelmMIuXNjgAwC5+RIjF4S0SDQu6oy44ZTwekwNp2ETaZ2sXsOk+45aC4w==}
+    engines: {node: '>=18'}
+
+  '@huggingface/tasks@0.11.3':
+    resolution: {integrity: sha512-IYq4OdlySdscjkFwm6iIqP1ZgKl4OGhvQFJWI7Yxpq2V8RmXcgIjiqk/65S6Ap7i+eyCdlOC4qweVy/ICNE0JA==}
 
   '@img/sharp-darwin-arm64@0.33.4':
     resolution: {integrity: sha512-p0suNqXufJs9t3RqLBO6vvrgr5OhgbWp76s5gTRvdmxmuv9E1rcaqGUsl3l4mKVmXPkTkTErXediAui4x+8PSA==}
@@ -2070,8 +2080,8 @@ packages:
   magicast@0.3.4:
     resolution: {integrity: sha512-TyDF/Pn36bBji9rWKHlZe+PZb6Mx5V8IHCSxk7X4aljM4e/vyDvZZYwHewdVaqiA0nb3ghfHU/6AUpDxWoER2Q==}
 
-  mallam@1.0.38:
-    resolution: {integrity: sha512-xmvG4BOr4FSKsO6leK08PPD8XF0NshpYiPbN4HqnQRj2fmoJv4p037+yAK2iPhCR0eFn2zxOa1psPywArV3ONw==}
+  mallam@1.0.40:
+    resolution: {integrity: sha512-17V4M+mcKWCQ6OFPBuVHy8AolMBkcLJxCVKMXhRADZtS1eR8Wf6K9d3nPvf5QuJMXqkIC53Nrb+HEEcXjBpEZw==}
 
   media-chrome@3.2.4:
     resolution: {integrity: sha512-QtkqvAiKCVf5mSN6cWKOkBPSAwgamFS52DdIyOlsVrlz+shRWTsyOihZRFRSddx//r+ZKt9SlYJJFgtVmSUvUg==}
@@ -2176,9 +2186,6 @@ packages:
       sass:
         optional: true
 
-  node-bin-setup@1.1.3:
-    resolution: {integrity: sha512-opgw9iSCAzT2+6wJOETCpeRYAQxSopqQ2z+N6BXwIMsQQ7Zj5M8MaafQY8JMlolRR6R1UXg2WmhKp0p9lSOivg==}
-
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
@@ -2191,11 +2198,6 @@ packages:
     peerDependenciesMeta:
       encoding:
         optional: true
-
-  node@20.15.1:
-    resolution: {integrity: sha512-/L1ipckYCdu4f8BvMX26HJHx5mSf7Q4Tu9zvgV5lpbMT+S2ojUGLU2uvB65zjiVZHUpf3uTxk5H9t6gDV0Tc3A==}
-    engines: {npm: '>=5.0.0'}
-    hasBin: true
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -3402,6 +3404,12 @@ snapshots:
   '@hookform/resolvers@3.9.0(react-hook-form@7.52.1(react@18.3.1))':
     dependencies:
       react-hook-form: 7.52.1(react@18.3.1)
+
+  '@huggingface/inference@2.8.0':
+    dependencies:
+      '@huggingface/tasks': 0.11.3
+
+  '@huggingface/tasks@0.11.3': {}
 
   '@img/sharp-darwin-arm64@0.33.4':
     optionalDependencies:
@@ -4877,9 +4885,8 @@ snapshots:
       '@babel/types': 7.24.9
       source-map-js: 1.2.0
 
-  mallam@1.0.38:
+  mallam@1.0.40:
     dependencies:
-      node: 20.15.1
       typescript: 5.5.3
 
   media-chrome@3.2.4: {}
@@ -4983,17 +4990,11 @@ snapshots:
       - '@babel/core'
       - babel-plugin-macros
 
-  node-bin-setup@1.1.3: {}
-
   node-domexception@1.0.0: {}
 
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-
-  node@20.15.1:
-    dependencies:
-      node-bin-setup: 1.1.3
 
   normalize-path@3.0.0: {}
 

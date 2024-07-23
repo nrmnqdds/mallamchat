@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
+import { unstable_noStore as noStore } from "next/cache";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -18,6 +19,7 @@ export default async function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	noStore();
 	const session = await auth();
 
 	return (

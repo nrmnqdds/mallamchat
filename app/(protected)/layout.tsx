@@ -21,6 +21,11 @@ import { useState } from "react";
 
 const navigation = [
 	{
+		name: "Soalan",
+		href: "/soalan",
+		icon: DocumentTextIcon,
+	},
+	{
 		name: "Periksa Tatabahasa",
 		href: "/periksa-tatabahasa",
 		icon: DocumentTextIcon,
