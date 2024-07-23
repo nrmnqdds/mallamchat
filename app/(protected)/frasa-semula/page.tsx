@@ -1,9 +1,8 @@
 "use client";
 
-import { FrasaSemula } from "@/lib/server/frasasemula";
 import { LanguageIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { readStreamableValue } from "ai/rsc";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -22,17 +21,36 @@ const Page = () => {
 		},
 	});
 
-	const onSubmit = async (data: z.infer<typeof schema>) => {
+	const onSubmit = useCallback(async (data: z.infer<typeof schema>) => {
 		form.setValue("output", "");
-		const res = await FrasaSemula(data.input);
-		for await (const content of readStreamableValue(res)) {
-			form.setValue(
-				"output",
-				//@ts-ignore
-				(form.getValues().output += content.message as string),
-			);
+		const res = await fetch("/api/mallam/frasasemula", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(data),
+		});
+
+		if (!res.body) return;
+
+		// To decode incoming data as a string
+		const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+
+		while (true) {
+			const { value, done } = await reader.read();
+			if (done) {
+				break;
+			}
+			if (value) {
+				const message = JSON.parse(value.trim());
+				form.setValue(
+					"output",
+					//@ts-ignore
+					(form.getValues().output += message.message as string),
+				);
+			}
 		}
-	};
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-5">
@@ -59,6 +77,7 @@ const Page = () => {
 				<div className="flex items-center gap-5">
 					<button
 						type="submit"
+						disabled={form.formState.isSubmitting}
 						className="flex items-center mt-4 px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 					>
 						<LanguageIcon className="w-5 h-5 mr-2" />
@@ -66,6 +85,7 @@ const Page = () => {
 					</button>
 					<button
 						type="button"
+						disabled={form.formState.isSubmitting}
 						className="flex items-center mt-4 px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
 						onClick={() => {
 							form.setValue("output", "");
@@ -79,7 +99,11 @@ const Page = () => {
 			</form>
 			<div>
 				<textarea
-					placeholder="Hasil frasa semula"
+					placeholder={
+						form.formState.isSubmitting
+							? "Memfrasa semula..."
+							: "Hasil Frasa Semula"
+					}
 					rows={5}
 					className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
 					readOnly
