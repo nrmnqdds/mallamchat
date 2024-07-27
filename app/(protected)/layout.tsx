@@ -1,3 +1,4 @@
+import Particles from "@/components/ui/particles";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { unstable_noStore } from "next/cache";
@@ -17,11 +18,19 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
 	return (
 		<main
 			className={cn(
-				"min-h-screen w-full bg-background flex-1 py-24",
+				"min-h-screen w-full bg-transparent flex-1 py-24",
 				sp.className,
 			)}
 		>
 			{children}
+			<Particles
+				className="absolute inset-0 -z-10"
+				quantity={50}
+				ease={70}
+				size={0.05}
+				staticity={40}
+				color="#ffffff"
+			/>
 		</main>
 	);
 };
