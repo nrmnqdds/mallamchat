@@ -128,7 +128,15 @@ const Page = () => {
 				</TextShimmer>
 			</div>
 			<div className="mt-5 w-3/4 sm:w-full max-w-2xl flex flex-col">
-				<h1 className="text-2xl sm:text-5xl text-center">
+				<motion.h1
+					initial={{ opacity: 0, y: 10 }}
+					animate={{
+						opacity: 1,
+						y: 0,
+						transition: { delay: 0.1, ease: "easeOut" },
+					}}
+					className="text-2xl sm:text-5xl text-center"
+				>
 					🌙{" "}
 					{curHr < 12
 						? "Selamat Pagi, "
@@ -136,7 +144,7 @@ const Page = () => {
 							? "Selamat Tengahari, "
 							: "Selamat MaLLaM, "}
 					{session.data?.user?.name ?? "visitor"}
-				</h1>
+				</motion.h1>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="mt-10 z-10">
 					<div>
 						<div className="relative">
