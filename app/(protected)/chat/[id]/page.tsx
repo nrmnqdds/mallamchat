@@ -107,7 +107,7 @@ const Page = () => {
 				<div className="w-full">
 					<Textarea
 						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
-						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
 						readOnly
 						ref={outputRef}
 						value={output}
