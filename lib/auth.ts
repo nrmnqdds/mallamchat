@@ -1,4 +1,4 @@
-import { db } from "@/drizzle/schema";
+import { db } from "@/drizzle";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";

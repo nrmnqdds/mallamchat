@@ -7,7 +7,7 @@ const Navbar = async () => {
 	return (
 		<nav className="fixed w-full z-10 flex flex-row items-center justify-between p-5">
 			<Link href="/">
-				<h1 className="text-2xl font-bold">Tatabahasaly</h1>
+				<h1 className="text-2xl font-bold">MaLLaMChat</h1>
 			</Link>
 			{session ? (
 				<UserDropdown user={session.user} />

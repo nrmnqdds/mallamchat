@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { useInView } from "framer-motion";
 import { ArrowRightIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
@@ -12,6 +13,7 @@ export default function HeroSection() {
 	const ref = useRef(null);
 	const inView = useInView(ref, { once: true, margin: "-100px" });
 	const { push } = useRouter();
+	const session = useSession();
 	return (
 		<section
 			id="hero"
@@ -37,7 +39,7 @@ export default function HeroSection() {
 				onClick={() => push("/new")}
 				className="animate-fade-in -translate-y-4 gap-1 rounded-lg text-white opacity-0 ease-in-out [--animation-delay:600ms] dark:text-black"
 			>
-				<span>Go to app</span>
+				<span>{session?.data?.user ? "Go to app" : "Try it now!"}</span>
 				<ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
 			</Button>
 			<div
@@ -62,7 +64,7 @@ export default function HeroSection() {
 						loop
 						src="https://r2.studyjom.nrmnqdds.com/mallam-demo4.mp4"
 						muted
-						className="relative block size-full rounded-[inherit]  border object-contain"
+						className="relative block size-full rounded-[inherit] border object-contain"
 					/>
 				</div>
 			</div>

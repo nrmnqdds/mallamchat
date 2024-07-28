@@ -1,6 +1,8 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/providers/session-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
@@ -9,9 +11,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Tatabahasaly",
+	title: "MaLLaM Chat",
 	description:
-		"Kecerdasan buatan bagi memastikan tatabahasa yang betul dalam penulisan",
+		"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
 };
 
 export default async function RootLayout({
@@ -29,15 +31,18 @@ export default async function RootLayout({
 					"min-h-screen bg-background antialiased",
 				)}
 			>
-				<SessionProvider session={session}>
-					<ThemeProvider
-						attribute="class"
-						defaultTheme="dark"
-						disableTransitionOnChange
-					>
-						{children}
-					</ThemeProvider>
-				</SessionProvider>
+				<QueryProvider>
+					<SessionProvider session={session}>
+						<ThemeProvider
+							attribute="class"
+							defaultTheme="dark"
+							disableTransitionOnChange
+						>
+							{children}
+							<Toaster />
+						</ThemeProvider>
+					</SessionProvider>
+				</QueryProvider>
 			</body>
 		</html>
 	);

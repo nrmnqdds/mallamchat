@@ -2,11 +2,14 @@
 
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Textarea } from "@/components/ui/textarea";
+import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
@@ -17,8 +20,6 @@ const today = new Date();
 const curHr = today.getHours();
 
 const Page = () => {
-	const session = useSession();
-	const [output, setOutput] = useState<string>("");
 	const form = useForm<z.infer<typeof schema>>({
 		resolver: zodResolver(schema),
 		defaultValues: {
@@ -26,24 +27,22 @@ const Page = () => {
 		},
 	});
 
-	const outputRef = useRef<HTMLTextAreaElement>(null);
-	const inputRef = useRef<HTMLTextAreaElement>(null);
+	const { createChat } = useInitChatStore();
+	const session = useSession();
+	const router = useRouter();
 
-	useEffect(() => {
-		if (outputRef.current) {
-			outputRef.current.style.height = `${outputRef.current.scrollHeight}px`;
-		}
-	}, [output]);
+	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
 		if (inputRef.current) {
 			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
 		}
-	}, [output]);
+	}, [inputRef]);
 
 	const onSubmit = useCallback(async (data: z.infer<typeof schema>) => {
-		setOutput("");
-		const res = await fetch("/api/mallam/soalan", {
+		createChat(data.input);
+
+		const res = await fetch("/api/chat/new", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -51,25 +50,29 @@ const Page = () => {
 			body: JSON.stringify(data),
 		});
 
-		if (!res.body) return;
-
-		const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
-
-		while (true) {
-			const { value, done } = await reader.read();
-			if (done) {
-				break;
-			}
-			if (value) {
-				const message = JSON.parse(value.split(/\s{2,}/)[0]);
-				console.log(message.message);
-				// let message2: ChatCompletionResponse | undefined;
-				// if (JSON.parse(value.split(/\s{2,}/)[1])) {
-				// 	message2 = JSON.parse(value.split(/\s{2,}/)[1]);
-				// }
-				setOutput((prev) => `${prev + message.message}`);
-			}
+		if (!res.ok) {
+			console.log(res);
+			return toast.error("MaLLaM tidak dapat menjawab soalan anda");
 		}
+
+		const json = await res.json();
+		console.log(json);
+
+		router.push(`/chat/${json.id}`);
+	}, []);
+
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Enter" && !e.shiftKey) {
+				onSubmit(form.getValues());
+			}
+		};
+
+		document.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown);
+		};
 	}, []);
 
 	return (
@@ -102,11 +105,6 @@ const Page = () => {
 								onChange={(e) => {
 									form.setValue("input", e.target.value);
 								}}
-								onKeyDown={(e) => {
-									if (e.key === "Enter" && !e.shiftKey) {
-										form.handleSubmit(onSubmit)();
-									}
-								}}
 							/>
 							<div
 								className={cn(
@@ -130,19 +128,6 @@ const Page = () => {
 						)}
 					</div>
 				</form>
-				{/* <div className="w-full"> */}
-				{/* 	<Textarea */}
-				{/* 		placeholder={ */}
-				{/* 			form.formState.isSubmitting */}
-				{/* 				? "Sedang memproses..." */}
-				{/* 				: "Hasil Tanya" */}
-				{/* 		} */}
-				{/* 		className="bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32" */}
-				{/* 		readOnly */}
-				{/* 		ref={outputRef} */}
-				{/* 		value={output} */}
-				{/* 	/> */}
-				{/* </div> */}
 			</div>
 		</div>
 	);

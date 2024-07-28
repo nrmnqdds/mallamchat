@@ -1,19 +1,15 @@
+import { relations } from "drizzle-orm";
 import {
 	boolean,
 	integer,
+	json,
 	pgTable,
 	primaryKey,
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-import { drizzle } from "drizzle-orm/postgres-js";
+import type { ChatCompletionResponse } from "mallam";
 import type { AdapterAccountType } from "next-auth/adapters";
-import postgres from "postgres";
-
-const connectionString = process.env.DATABASE_URL!;
-const pool = postgres(connectionString, { max: 1 });
-
-export const db = drizzle(pool);
 
 export const users = pgTable("user", {
 	id: text("id")
@@ -91,3 +87,24 @@ export const authenticators = pgTable(
 		}),
 	}),
 );
+
+export const chats = pgTable("chats", {
+	id: text("id")
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	title: text("title").notNull(),
+	contents: json("contents").$type<ChatCompletionResponse[]>().notNull(),
+	user_id: text("user_id").notNull(),
+	created_at: timestamp("created_at").defaultNow(),
+});
+
+export const usersRelations = relations(users, ({ many }) => ({
+	posts: many(chats),
+}));
+
+export const chatsRelations = relations(chats, ({ one }) => ({
+	author: one(users, {
+		fields: [chats.user_id],
+		references: [users.id],
+	}),
+}));
