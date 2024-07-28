@@ -1,5 +1,6 @@
 import { mallam } from "@/lib/mallam";
-import type { NextRequest } from "next/server";
+import type { ChatCompletionMessageParam } from "mallam";
+import { type NextRequest, NextResponse } from "next/server";
 
 export const runtime = "edge";
 export const dynamic = "force-dynamic";
@@ -7,12 +8,24 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
 	const { input } = await request.json();
 
-	const result = await mallam.chatCompletion(input, {
+	const instructions: ChatCompletionMessageParam[] = [
+		{
+			role: "system",
+			content:
+				"Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut.",
+		},
+		{
+			role: "user",
+			content: input,
+		},
+	];
+
+	const result = await mallam.chatCompletion(instructions, {
 		stream: true,
 		max_tokens: 1000,
 	});
 
-	return new Response(result, {
+	return new NextResponse(result, {
 		headers: {
 			Connection: "keep-alive",
 			"Content-Encoding": "none",

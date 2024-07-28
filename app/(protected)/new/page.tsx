@@ -61,8 +61,8 @@ const Page = () => {
 				break;
 			}
 			if (value) {
-				console.log(value);
 				const message = JSON.parse(value.split(/\s{2,}/)[0]);
+				console.log(message.message);
 				// let message2: ChatCompletionResponse | undefined;
 				// if (JSON.parse(value.split(/\s{2,}/)[1])) {
 				// 	message2 = JSON.parse(value.split(/\s{2,}/)[1]);
@@ -85,10 +85,10 @@ const Page = () => {
 				<h1 className="text-5xl text-center">
 					🌙{" "}
 					{curHr < 12
-						? "Good Morning,"
+						? "Selamat Pagi, "
 						: curHr < 18
-							? "Good Afternoon,"
-							: "Good Evening,"}{" "}
+							? "Selamat Petang, "
+							: "Selamat MaLLaM, "}
 					{session.data?.user?.name ?? "visitor"}
 				</h1>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="mt-10">
