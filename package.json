@@ -6,10 +6,11 @@
 		"dev": "concurrently --raw \"next dev\" \"drizzle-kit studio\"",
 		"build": "next build",
 		"start": "next start",
-		"generate": "drizzle-kit generate",
 		"format": "biome format --write ./app ./components ./lib ./hooks ./providers",
 		"lint": "biome lint ./app ./components ./lib ./hooks ./providers",
-		"migrate": "drizzle-kit migrate --config=drizzle.config.ts"
+		"generate": "drizzle-kit generate",
+		"migrate": "drizzle-kit migrate --config=drizzle.config.ts",
+		"studio": "drizzle-kit studio"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.4.1",
