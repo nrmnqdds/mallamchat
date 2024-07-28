@@ -1,13 +1,16 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Textarea } from "@/components/ui/textarea";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -18,6 +21,40 @@ const schema = z.object({
 
 const today = new Date();
 const curHr = today.getHours();
+
+const contohPrompt = [
+	{
+		key: 0,
+		value: "Apa maksud KWSP?",
+	},
+	{
+		key: 1,
+		value: "Berapa harga iPhone 13?",
+	},
+	{
+		key: 2,
+		value: "Cara membuat kuih lapis?",
+	},
+];
+
+const cardAnimation = {
+	hidden: { height: 0 },
+	visible: {
+		height: "auto",
+		transition: { ease: "easeOut" },
+	},
+};
+
+const cardAnimation2 = {
+	hidden: { scale: 0, opacity: 0 },
+	visible: {
+		scale: 1,
+		opacity: 1,
+		transition: { delay: 0.3, ease: "easeOut" },
+	},
+};
+
+const MotionCard = motion(Card);
 
 const Page = () => {
 	const form = useForm<z.infer<typeof schema>>({
@@ -34,46 +71,52 @@ const Page = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
-		if (inputRef.current) {
-			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+		const textarea = inputRef.current;
+		if (textarea) {
+			const adjustHeight = () => {
+				textarea.style.height = "128px";
+				textarea.style.height = `${textarea.scrollHeight}px`;
+			};
+
+			textarea.addEventListener("input", adjustHeight);
+
+			adjustHeight();
+
+			return () => {
+				textarea.removeEventListener("input", adjustHeight);
+			};
 		}
-	}, [inputRef]);
-
-	const onSubmit = useCallback(async (data: z.infer<typeof schema>) => {
-		createChat(data.input);
-
-		const res = await fetch("/api/chat/new", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		});
-
-		if (!res.ok) {
-			console.log(res);
-			return toast.error("MaLLaM tidak dapat menjawab soalan anda");
-		}
-
-		const json = await res.json();
-		console.log(json);
-
-		router.push(`/chat/${json.id}`);
 	}, []);
 
-	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === "Enter" && !e.shiftKey) {
-				onSubmit(form.getValues());
+	const { mutateAsync } = useMutation({
+		mutationKey: ["new-chat"],
+		mutationFn: async (data: z.infer<typeof schema>) => {
+			const res = await fetch("/api/chat/new", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(data),
+			});
+
+			if (!res.ok) {
+				console.log(res);
+				return toast.error("MaLLaM tidak dapat menjawab soalan anda");
 			}
-		};
 
-		document.addEventListener("keydown", handleKeyDown);
+			const json = await res.json();
 
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
-	}, []);
+			return json;
+		},
+		onSuccess: (data) => {
+			router.push(`/chat/${data.id}`);
+		},
+	});
+
+	const onSubmit = async (data: z.infer<typeof schema>) => {
+		createChat(data.input);
+		await mutateAsync(data);
+	};
 
 	return (
 		<div className="w-full flex flex-col items-center justify-center">
@@ -84,28 +127,37 @@ const Page = () => {
 					</span>
 				</TextShimmer>
 			</div>
-			<div className="mt-5 w-full max-w-2xl flex flex-col">
-				<h1 className="text-5xl text-center">
+			<div className="mt-5 w-3/4 sm:w-full max-w-2xl flex flex-col">
+				<h1 className="text-2xl sm:text-5xl text-center">
 					🌙{" "}
 					{curHr < 12
 						? "Selamat Pagi, "
 						: curHr < 18
-							? "Selamat Petang, "
+							? "Selamat Tengahari, "
 							: "Selamat MaLLaM, "}
 					{session.data?.user?.name ?? "visitor"}
 				</h1>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="mt-10">
+				<form onSubmit={form.handleSubmit(onSubmit)} className="mt-10 z-10">
 					<div>
 						<div className="relative">
 							<Textarea
-								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
+								className="rounded-xl bg-zinc-800 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 								placeholder="Apa yang boleh MaLLaM bantu anda hari ini?"
 								ref={inputRef}
 								value={form.watch("input")}
 								onChange={(e) => {
 									form.setValue("input", e.target.value);
 								}}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" && !e.shiftKey) {
+										e.preventDefault();
+										form.handleSubmit(onSubmit)();
+									}
+								}}
 							/>
+							<div className="absolute bottom-2 left-2 pointer-events-none">
+								<p className="text-zinc-700 text-xs">mallam-small</p>
+							</div>
 							<div
 								className={cn(
 									"bottom-2 right-2",
@@ -128,6 +180,45 @@ const Page = () => {
 						)}
 					</div>
 				</form>
+				<motion.div
+					variants={cardAnimation}
+					initial="hidden"
+					animate="visible"
+					className="relative rounded-b-xl bg-zinc-900 border-card w-[98%] self-center z-[9] h-fit -translate-y-3"
+				>
+					<div className="p-5 flex flex-col">
+						<motion.h1
+							initial={{ opacity: 0, y: 10 }}
+							animate={{
+								opacity: 1,
+								y: 0,
+								transition: { delay: 0.2, ease: "easeOut" },
+							}}
+						>
+							Contoh prompt yang boleh digunakan:
+						</motion.h1>
+						<div className="flex flex-row items-center justify-between gap-2 mt-5">
+							{contohPrompt.map((prompt) => (
+								<MotionCard
+									key={prompt.key}
+									variants={cardAnimation2}
+									initial="hidden"
+									animate="visible"
+									whileHover={{ scale: 1.05 }}
+									className="p-2 bg-zinc-800 cursor-pointer rounded-xl text-center"
+									onClick={() => {
+										form.setValue("input", prompt.value);
+										form.handleSubmit(() =>
+											onSubmit({ input: prompt.value }),
+										)();
+									}}
+								>
+									<h1>{prompt.value}</h1>
+								</MotionCard>
+							))}
+						</div>
+					</div>
+				</motion.div>
 			</div>
 		</div>
 	);

@@ -7,6 +7,8 @@
 		"build": "next build",
 		"start": "next start",
 		"generate": "drizzle-kit generate",
+		"format": "biome format --write ./app ./components ./lib ./hooks ./providers",
+		"lint": "biome lint ./app ./components ./lib ./hooks ./providers",
 		"migrate": "drizzle-kit migrate --config=drizzle.config.ts"
 	},
 	"dependencies": {
@@ -28,7 +30,7 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"drizzle-orm": "^0.32.0",
-		"framer-motion": "^11.3.18",
+		"framer-motion": "^11.3.19",
 		"lucide-react": "^0.408.0",
 		"mallam": "^1.0.42",
 		"next": "14.2.5",
@@ -47,6 +49,7 @@
 		"zustand": "^4.5.4"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "1.8.3",
 		"@types/node": "^20",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",

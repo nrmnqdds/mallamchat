@@ -2,7 +2,6 @@
 
 import { Textarea } from "@/components/ui/textarea";
 import { useInitChatStore } from "@/hooks/use-initchat";
-import useStreamResponse from "@/hooks/use-streamresponse";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -10,75 +9,132 @@ import { toast } from "sonner";
 const Page = () => {
 	const { chat, createChat } = useInitChatStore();
 	const [input, setInput] = useState<string>("");
-	const { startStream, isLoading, responses } = useStreamResponse();
+	const [output, setOutput] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const outputRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
-		if (chat) {
-			startStream(chat);
-		}
+		(async () => {
+			if (chat) {
+				await sendChat(chat);
+			}
+		})();
 
 		return () => {
 			setInput("");
 			createChat("");
 		};
-	}, [chat]);
+	}, [chat, createChat]);
 
 	useEffect(() => {
-		if (inputRef.current) {
-			inputRef.current.style.height = `${inputRef.current.scrollHeight}px`;
+		const textarea = inputRef.current;
+		if (textarea) {
+			const adjustHeight = () => {
+				textarea.style.height = "128px";
+				textarea.style.height = `${textarea.scrollHeight}px`;
+			};
+
+			textarea.addEventListener("input", adjustHeight);
+
+			adjustHeight();
+
+			return () => {
+				textarea.removeEventListener("input", adjustHeight);
+			};
 		}
-	}, [inputRef]);
-
-	useEffect(() => {
-		if (outputRef.current) {
-			outputRef.current.style.height = `${outputRef.current.scrollHeight}px`;
-		}
-	}, [outputRef]);
-
-	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.metaKey && e.key === "Enter" && !e.shiftKey) {
-				startStream(input);
-			}
-		};
-
-		document.addEventListener("keydown", handleKeyDown);
-
-		return () => {
-			document.removeEventListener("keydown", handleKeyDown);
-		};
 	}, []);
 
+	useEffect(() => {
+		const textarea = outputRef.current;
+		if (textarea) {
+			const adjustHeight = () => {
+				textarea.style.height = "auto";
+				textarea.style.height = `${textarea.scrollHeight}px`;
+			};
+
+			textarea.addEventListener("output", adjustHeight);
+
+			adjustHeight();
+
+			return () => {
+				textarea.removeEventListener("output", adjustHeight);
+			};
+		}
+	}, []);
+
+	const sendChat = async (data: string) => {
+		try {
+			console.log(data);
+			const response = await fetch("/api/mallam/soalan", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ input: data }),
+			});
+
+			setIsLoading(false);
+
+			if (!response.body) {
+				throw new Error("ReadableStream not supported in this browser.");
+			}
+
+			const reader = response.body
+				.pipeThrough(new TextDecoderStream())
+				.getReader();
+
+			while (true) {
+				const { value, done } = await reader.read();
+				if (done) {
+					break;
+				}
+				if (value) {
+					console.log(value);
+					const message = JSON.parse(value);
+					setOutput((prev) => `${prev + message.message}`);
+				}
+			}
+		} catch (e) {
+			toast.error("MaLLaM tidak dapat menjawab soalan anda");
+		}
+	};
+
 	return (
-		<div className="w-full flex flex-col items-center justify-center">
-			<div className="w-full">
-				<Textarea
-					placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
-					className="bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
-					readOnly
-					ref={outputRef}
-					value={responses}
-				/>
-			</div>
+		<div className="h-full w-full flex flex-col items-center justify-center">
 			<div className="mt-5 w-full max-w-2xl flex flex-col">
+				<div className="w-full">
+					<Textarea
+						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
+						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
+						readOnly
+						ref={outputRef}
+						value={output}
+					/>
+				</div>
 				<form
-					onSubmit={(e) => {
+					onSubmit={async (e) => {
 						e.preventDefault();
-						startStream(input);
+						await sendChat(input);
 					}}
 					className="mt-10"
 				>
 					<div>
 						<div className="relative">
 							<Textarea
-								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
+								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
 								placeholder="Apa yang boleh MaLLaM bantu anda hari ini?"
 								ref={inputRef}
 								value={input}
 								onChange={(e) => setInput(e.target.value)}
+								onKeyDown={async (e) => {
+									if (e.key === "Enter" && !e.shiftKey) {
+										e.preventDefault();
+										setIsLoading(true);
+										await sendChat(input);
+									}
+								}}
 							/>
 							<div
 								className={cn(

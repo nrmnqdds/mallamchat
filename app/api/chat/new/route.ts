@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
 	const title = await mallam.chatCompletion(instruction);
 
 	if (session?.user?.id) {
-		console.log(session.user);
 		const res = await db
 			.insert(chats)
 			.values({

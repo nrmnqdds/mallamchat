@@ -1,9 +1,16 @@
 import { type TypeOf, z } from "zod";
 
 const envVariables = z.object({
+	// Next Auth
+	AUTH_SECRET: z.string(),
+	AUTH_GOOGLE_ID: z.string(),
+	AUTH_GOOGLE_SECRET: z.string(),
+
+	// Database
 	DATABASE_URL: z.string(),
+
+	// Mallam API
 	MALLAM_API_KEY: z.string(),
-	NEXT_PUBLIC_HF_TOKEN: z.string(),
 });
 
 envVariables.parse(process.env);

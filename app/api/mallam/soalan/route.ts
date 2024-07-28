@@ -7,25 +7,27 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
 	const { input } = await request.json();
+	console.log(input);
 
-	const instructions: ChatCompletionMessageParam[] = [
-		{
-			role: "system",
-			content:
-				"Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut.",
-		},
-		{
-			role: "user",
-			content: input,
-		},
-	];
+	// const instructions: ChatCompletionMessageParam[] = [
+	// 	{
+	// 		role: "system",
+	// 		content:
+	// 			"Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut.",
+	// 	},
+	// 	{
+	// 		role: "user",
+	// 		content: input,
+	// 	},
+	// ];
 
-	const result = await mallam.chatCompletion(instructions, {
+	const result = await mallam.chatCompletion(input, {
+		model: "mallam-tiny",
 		stream: true,
 		max_tokens: 1000,
 	});
 
-	return new NextResponse(result, {
+	return new Response(result, {
 		headers: {
 			Connection: "keep-alive",
 			"Content-Encoding": "none",
