@@ -31,7 +31,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}
+          tags: ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -42,7 +42,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "s+ghcr.io/nrmnqdds/tatabahasaly-webapp.*+ghcr.io/nrmnqdds/tatabahasaly-webapp:${{ github.ref_name }}'+g" /home/ubuntu/docker-compose.yaml
+            sed -i "s+ghcr.io/nrmnqdds/mallamchat-webapp.*+ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}'+g" /home/ubuntu/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
-            docker compose up --force-recreate --build -d tatabahasaly-webapp
+            docker compose up --force-recreate --build -d mallamchat-webapp
             docker system prune -a -f
