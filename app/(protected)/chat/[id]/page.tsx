@@ -153,19 +153,6 @@ const Page = () => {
 						</div>
 					</div>
 				</form>
-				{/* <div className="w-full"> */}
-				{/* 	<Textarea */}
-				{/* 		placeholder={ */}
-				{/* 			form.formState.isSubmitting */}
-				{/* 				? "Sedang memproses..." */}
-				{/* 				: "Hasil Tanya" */}
-				{/* 		} */}
-				{/* 		className="bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32" */}
-				{/* 		readOnly */}
-				{/* 		ref={outputRef} */}
-				{/* 		value={output} */}
-				{/* 	/> */}
-				{/* </div> */}
 			</div>
 		</div>
 	);

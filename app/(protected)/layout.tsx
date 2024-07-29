@@ -1,14 +1,13 @@
+import Sidebar from "@/components/sidebar";
 import Particles from "@/components/ui/particles";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { unstable_noStore } from "next/cache";
 import { Space_Grotesk } from "next/font/google";
 import { redirect } from "next/navigation";
 
 const sp = Space_Grotesk({ display: "swap", subsets: ["latin"] });
 
 const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
-	unstable_noStore();
 	const session = await auth();
 
 	if (!session) {
@@ -22,6 +21,7 @@ const ProtectedLayout = async ({ children }: { children: React.ReactNode }) => {
 				sp.className,
 			)}
 		>
+			<Sidebar />
 			{children}
 			<Particles
 				className="absolute inset-0 -z-10"
