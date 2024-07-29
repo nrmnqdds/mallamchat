@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
 import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/providers/session-provider";

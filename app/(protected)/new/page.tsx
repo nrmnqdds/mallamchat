@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,7 +13,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const schema = z.object({
@@ -67,6 +67,7 @@ const Page = () => {
 	const { createChat } = useInitChatStore();
 	const session = useSession();
 	const router = useRouter();
+	const { toast } = useToast();
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -101,7 +102,11 @@ const Page = () => {
 
 			if (!res.ok) {
 				console.log(res);
-				return toast.error("MaLLaM tidak dapat menjawab soalan anda");
+				return toast({
+					variant: "destructive",
+					title: "Masalah Dalaman",
+					description: "MaLLaM tidak dapat menjawab soalan anda",
+				});
 			}
 
 			const json = await res.json();

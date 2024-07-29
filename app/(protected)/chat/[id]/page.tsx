@@ -1,16 +1,18 @@
 "use client";
 
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 
 const Page = () => {
 	const { chat, createChat } = useInitChatStore();
 	const [input, setInput] = useState<string>("");
 	const [output, setOutput] = useState<string>("");
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+
+	const { toast } = useToast();
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const outputRef = useRef<HTMLTextAreaElement>(null);
@@ -98,7 +100,11 @@ const Page = () => {
 				}
 			}
 		} catch (e) {
-			toast.error("MaLLaM tidak dapat menjawab soalan anda");
+			return toast({
+				variant: "destructive",
+				title: "Masalah Dalaman",
+				description: "Sila cuba sebentar lagi.",
+			});
 		}
 	};
 
