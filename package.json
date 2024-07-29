@@ -10,7 +10,8 @@
 		"lint": "biome lint ./app ./components ./lib ./hooks ./providers",
 		"generate": "drizzle-kit generate",
 		"migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-		"studio": "drizzle-kit studio"
+		"studio": "drizzle-kit studio",
+		"clean": "rm -rf .next"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.4.1",

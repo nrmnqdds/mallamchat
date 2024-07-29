@@ -46,6 +46,7 @@ const Page = () => {
 		}
 	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <Nak resize output textarea based on output state>
 	useEffect(() => {
 		const textarea = outputRef.current;
 		if (textarea) {
@@ -54,15 +55,15 @@ const Page = () => {
 				textarea.style.height = `${textarea.scrollHeight}px`;
 			};
 
-			textarea.addEventListener("output", adjustHeight);
+			textarea.addEventListener("input", adjustHeight);
 
 			adjustHeight();
 
 			return () => {
-				textarea.removeEventListener("output", adjustHeight);
+				textarea.removeEventListener("input", adjustHeight);
 			};
 		}
-	}, []);
+	}, [output]);
 
 	const sendChat = async (data: string) => {
 		try {
@@ -108,9 +109,10 @@ const Page = () => {
 					<Textarea
 						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
-						readOnly
+						// readOnly
 						ref={outputRef}
 						value={output}
+						onChange={(e) => setOutput(e.target.value)}
 					/>
 				</div>
 				<form
