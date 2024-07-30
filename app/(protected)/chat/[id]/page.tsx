@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const Page = () => {
@@ -17,18 +18,12 @@ const Page = () => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const outputRef = useRef<HTMLTextAreaElement>(null);
 
-	useEffect(() => {
-		(async () => {
-			if (chat) {
-				await sendChat(chat);
-			}
-		})();
-
-		return () => {
-			setInput("");
-			createChat("");
-		};
-	}, [chat, createChat]);
+	useQuery({
+		queryKey: ["init-chat"],
+		queryFn: async () => await sendChat(chat),
+		enabled: !!chat,
+		retry: 3,
+	});
 
 	useEffect(() => {
 		const textarea = inputRef.current;
@@ -92,6 +87,7 @@ const Page = () => {
 				while (true) {
 					const { value, done } = await reader.read();
 					if (done) {
+						createChat("");
 						break;
 					}
 					if (value) {
@@ -117,7 +113,7 @@ const Page = () => {
 				});
 			}
 		},
-		[toast],
+		[toast, createChat],
 	);
 
 	return (
