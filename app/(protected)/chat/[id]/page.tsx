@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import type { ChatCompletionResponse } from "mallam";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const Page = () => {
@@ -22,7 +23,7 @@ const Page = () => {
 		queryKey: ["init-chat"],
 		queryFn: async () => await sendChat(chat),
 		enabled: !!chat,
-		retry: 3,
+		retry: false,
 	});
 
 	useEffect(() => {
@@ -62,6 +63,27 @@ const Page = () => {
 		}
 	}, [output]);
 
+	function parsemalformedJSON(str: string): ChatCompletionResponse[] {
+		// Split the string into separate JSON objects
+		const jsonObjects = str.match(/\{[^}]+\}/g);
+
+		if (!jsonObjects) {
+			throw new Error("No valid JSON objects found in the string");
+		}
+
+		// Parse each object and return the array
+		return jsonObjects.map((obj) => {
+			const parsed = JSON.parse(obj) as ChatCompletionResponse;
+			if (typeof parsed.id !== "string" || typeof parsed.message !== "string") {
+				throw new Error(
+					"Parsed object does not match ChatCompletionResponse interface",
+				);
+			}
+			return parsed;
+		});
+	}
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <recursive error>
 	const sendChat = useCallback(
 		async (data: string) => {
 			try {
@@ -91,12 +113,16 @@ const Page = () => {
 						break;
 					}
 					if (value) {
-						const _message = value.trim().split(/\s{2,}/);
-						console.log("_message: ", _message);
-						for (const message of _message) {
-							const text = JSON.parse(message);
-							console.log("text: ", text);
-							setOutput((prev) => `${prev + text.message}`);
+						// console.log(value);
+						const _ = JSON.parse(value.trim());
+						if (_.usage) {
+							createChat("");
+							break;
+						}
+
+						const text: ChatCompletionResponse[] = parsemalformedJSON(value);
+						for (const message of text) {
+							setOutput((prev) => `${prev + message.message}`);
 						}
 					}
 				}
