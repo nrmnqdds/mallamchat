@@ -2,8 +2,8 @@ import { mallam } from "@/lib/mallam";
 import type { ChatCompletionMessageParam } from "mallam";
 import { type NextRequest, NextResponse } from "next/server";
 
-// export const runtime = "edge";
-// export const dynamic = "force-dynamic";
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
 	const { input } = await request.json();
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
 		max_tokens: 1000,
 	});
 
-	return new Response(result, {
+	return new NextResponse(result, {
 		// Set the headers for Server-Sent Events (SSE)
 		headers: {
 			Connection: "keep-alive",
@@ -37,36 +37,4 @@ export async function POST(request: NextRequest) {
 			"Content-Type": "json/event-stream; charset=utf-8",
 		},
 	});
-
-	// const encoder = new TextEncoder();
-	//
-	// // Create a streaming response
-	// const customReadable = new ReadableStream({
-	// 	async start(controller) {
-	// 		const res = await mallam.chatCompletion(instruction, {
-	// 			stream: true,
-	// 		});
-	//
-	// 		const reader = res.getReader();
-	// 		let result;
-	// 		while ((result = await reader.read()) && !result.done) {
-	// 			controller.enqueue(
-	// 				encoder.encode(`${JSON.stringify(result.value)}\n\n`),
-	// 			);
-	// 		}
-	//
-	// 		controller.close();
-	// 	},
-	// });
-	//
-	// return new Response(customReadable, {
-	// 	// Set the headers for Server-Sent Events (SSE)
-	// 	headers: {
-	// 		Connection: "keep-alive",
-	// 		"Transfer-Encoding": "chunked",
-	// 		"Content-Encoding": "none",
-	// 		"Cache-Control": "no-cache, no-transform",
-	// 		"Content-Type": "json/event-stream; charset=utf-8",
-	// 	},
-	// });
 }
