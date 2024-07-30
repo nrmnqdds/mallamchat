@@ -28,7 +28,7 @@
 		"drizzle-orm": "^0.32.0",
 		"framer-motion": "^11.3.19",
 		"lucide-react": "^0.408.0",
-		"mallam": "^1.0.42",
+		"mallam": "^1.0.46",
 		"next": "14.2.5",
 		"next-auth": "^5.0.0-beta.19",
 		"next-themes": "^0.3.0",

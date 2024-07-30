@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const Page = () => {
 	const { chat, createChat } = useInitChatStore();
@@ -67,46 +67,58 @@ const Page = () => {
 		}
 	}, [output]);
 
-	const sendChat = async (data: string) => {
-		try {
-			console.log(data);
-			const response = await fetch("/api/mallam/soalan", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ input: data }),
-			});
+	const sendChat = useCallback(
+		async (data: string) => {
+			try {
+				console.log(data);
+				const response = await fetch("/api/mallam/soalan", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ input: data }),
+				});
 
-			setIsLoading(false);
+				setIsLoading(false);
 
-			if (!response.body) {
-				throw new Error("ReadableStream not supported in this browser.");
-			}
-
-			const reader = response.body
-				.pipeThrough(new TextDecoderStream())
-				.getReader();
-
-			while (true) {
-				const { value, done } = await reader.read();
-				if (done) {
-					break;
+				if (!response.body) {
+					throw new Error("ReadableStream not supported in this browser.");
 				}
-				if (value) {
-					console.log(value);
-					const message = JSON.parse(value);
-					setOutput((prev) => `${prev + message.message}`);
+
+				const reader = response.body
+					.pipeThrough(new TextDecoderStream())
+					.getReader();
+
+				while (true) {
+					const { value, done } = await reader.read();
+					if (done) {
+						break;
+					}
+					if (value) {
+						const _message = value.trim().split(/\s{2,}/);
+						// console.log("-------length: ", _message.length);
+						// console.log("value: ", value);
+						// if (_message.length > 1) {
+						// 	console.log("_message: ", _message);
+						// }
+						for (const message of _message) {
+							// console.log("message: ", message);
+							const text = JSON.parse(message);
+							setOutput((prev) => `${prev + text.message}`);
+						}
+					}
 				}
+			} catch (e) {
+				console.log(e);
+				return toast({
+					variant: "destructive",
+					title: "Masalah Dalaman",
+					description: "Sila cuba sebentar lagi.",
+				});
 			}
-		} catch (e) {
-			return toast({
-				variant: "destructive",
-				title: "Masalah Dalaman",
-				description: "Sila cuba sebentar lagi.",
-			});
-		}
-	};
+		},
+		[toast],
+	);
 
 	return (
 		<div className="h-full w-full flex flex-col items-center justify-center">
@@ -115,10 +127,9 @@ const Page = () => {
 					<Textarea
 						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-32"
-						// readOnly
+						readOnly
 						ref={outputRef}
 						value={output}
-						onChange={(e) => setOutput(e.target.value)}
 					/>
 				</div>
 				<form
