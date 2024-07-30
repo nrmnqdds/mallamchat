@@ -92,14 +92,10 @@ const Page = () => {
 					}
 					if (value) {
 						const _message = value.trim().split(/\s{2,}/);
-						// console.log("-------length: ", _message.length);
-						// console.log("value: ", value);
-						// if (_message.length > 1) {
-						// 	console.log("_message: ", _message);
-						// }
+						console.log("_message: ", _message);
 						for (const message of _message) {
-							// console.log("message: ", message);
 							const text = JSON.parse(message);
+							console.log("text: ", text);
 							setOutput((prev) => `${prev + text.message}`);
 						}
 					}
