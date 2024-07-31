@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -119,6 +119,9 @@ const Page = () => {
 	});
 
 	const onSubmit = async (data: z.infer<typeof schema>) => {
+		if (!session.data?.user) {
+			signIn("google");
+		}
 		createChat(data.input);
 		await mutateAsync(data);
 	};
