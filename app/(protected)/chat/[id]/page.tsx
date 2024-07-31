@@ -66,7 +66,8 @@ const Page = () => {
 	// Current workaround for parsing malformed JSON
 	function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 		// Split the string into separate JSON objects
-		const jsonObjects = str.match(/\{[^}]+\}/g);
+		const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
+		const jsonObjects = str.match(regex);
 
 		if (!jsonObjects) {
 			throw new Error("No valid JSON objects found in the string");
