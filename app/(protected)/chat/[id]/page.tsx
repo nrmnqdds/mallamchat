@@ -131,10 +131,10 @@ const Page = () => {
 						const text: ChatCompletionResponse[] = parsemalformedJSON(value);
 
 						for (const message of text) {
-							if (message.usage) {
-								createChat("");
-								break;
-							}
+							// if (message.usage) {
+							// 	createChat("");
+							// 	break;
+							// }
 							setOutput((prev) => `${prev + message.message}`);
 						}
 					}
