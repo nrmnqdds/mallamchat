@@ -26,6 +26,7 @@ const Page = () => {
 		retry: false,
 	});
 
+	// Resize input textarea based on input state
 	useEffect(() => {
 		const textarea = inputRef.current;
 		if (textarea) {
@@ -44,6 +45,7 @@ const Page = () => {
 		}
 	}, []);
 
+	// Resize output textarea based on output state
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <Nak resize output textarea based on output state>
 	useEffect(() => {
 		const textarea = outputRef.current;
@@ -66,6 +68,7 @@ const Page = () => {
 	// Current workaround for parsing malformed JSON
 	function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 		// Split the string into separate JSON objects
+		// I write this myself trust me
 		const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
 		const jsonObjects = str.match(regex);
 
@@ -102,7 +105,7 @@ const Page = () => {
 	const sendChat = useCallback(
 		async (data: string) => {
 			try {
-				console.log(data);
+				// console.log(data);
 				const response = await fetch("/api/mallam/soalan", {
 					method: "POST",
 					headers: {
@@ -128,7 +131,7 @@ const Page = () => {
 						break;
 					}
 					if (value) {
-						console.log(value);
+						// console.log(value);
 						const text: ChatCompletionResponse[] = parsemalformedJSON(value);
 
 						for (const message of text) {
