@@ -63,6 +63,7 @@ const Page = () => {
 		}
 	}, [output]);
 
+	// Current workaround for parsing malformed JSON
 	function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 		// Split the string into separate JSON objects
 		const jsonObjects = str.match(/\{[^}]+\}/g);
@@ -82,6 +83,19 @@ const Page = () => {
 			return parsed;
 		});
 	}
+
+	// const processStream = async (stream: any) => {
+	// 	const answer = [];
+	// 	try {
+	// 		for await (const chat of stream) {
+	// 			answer.push(chat.answer);
+	// 			const ans = answer.join("");
+	// 			console.log(ans);
+	// 		}
+	// 	} catch (error) {
+	// 		// handle error
+	// 	}
+	// };
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <recursive error>
 	const sendChat = useCallback(
@@ -113,7 +127,7 @@ const Page = () => {
 						break;
 					}
 					if (value) {
-						// console.log(value);
+						console.log(value);
 						const _ = JSON.parse(value.trim());
 						if (_.usage) {
 							createChat("");
@@ -121,6 +135,7 @@ const Page = () => {
 						}
 
 						const text: ChatCompletionResponse[] = parsemalformedJSON(value);
+
 						for (const message of text) {
 							setOutput((prev) => `${prev + message.message}`);
 						}
