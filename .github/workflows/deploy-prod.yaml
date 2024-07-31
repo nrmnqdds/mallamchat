@@ -42,7 +42,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "/mallamchat-webapp:/,/restart:/ s|'ghcr.io/nrmnqdds/mallamchat-webapp:[^']*'|'ghcr.io/nrmnqdds/mallamchat-webapp:${{ env.sha_short }}'|" /home/ubuntu/docker-compose.yaml
+            sed -i "/mallamchat-webapp:/,/restart:/ s|'ghcr.io/nrmnqdds/mallamchat-webapp:[^']*'|'ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}'|" /home/ubuntu/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
             docker compose up --force-recreate --build -d mallamchat-webapp
             docker system prune -a -f
