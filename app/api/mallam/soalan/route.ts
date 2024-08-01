@@ -6,12 +6,12 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-	const { input, prev } = await request.json();
+	const { input, history } = await request.json();
 
 	const instruction: ChatCompletionMessageParam[] = [
 		{
 			role: "system",
-			content: `Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut berdasarkan context yang diberikan: ${prev}`,
+			content: `Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context yang diberikan: ${JSON.stringify(history)}`,
 		},
 		{
 			role: "user",

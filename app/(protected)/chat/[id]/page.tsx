@@ -31,7 +31,7 @@ const Page = () => {
 		queryKey: ["init-chat"],
 		// queryFn: async () => await sendChat(chat),
 		queryFn: async () => {
-			startStream(chat);
+			startStream({ input: chat, history: [] });
 			createChat("");
 		},
 		enabled: !!chat,
@@ -123,12 +123,12 @@ const Page = () => {
 							onKeyDown={async (e) => {
 								if (e.key === "Enter" && !e.shiftKey) {
 									e.preventDefault();
+									setInput("");
 									setOutput((prev) => [
 										...prev,
 										{ role: "user", content: input },
 									]);
-									await startStream(input);
-									setInput("");
+									await startStream({ input, history: output });
 								}
 							}}
 						/>

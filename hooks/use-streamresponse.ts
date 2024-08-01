@@ -40,13 +40,19 @@ export const useStreamResponse = ({
 	const { toast } = useToast();
 
 	const { mutateAsync: startStream, isPending: isLoading } = useMutation({
-		mutationFn: async (messageContent: string) => {
+		mutationFn: async ({
+			input,
+			history,
+		}: { input: string; history: ChatCompletionMessageParam[] }) => {
 			const response = await fetch("/api/mallam/soalan", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ input: messageContent }),
+				body: JSON.stringify({
+					input,
+					history: history.slice(Math.max(history.length - 2, 1)),
+				}),
 			});
 
 			if (!response.body) {
