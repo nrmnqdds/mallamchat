@@ -87,8 +87,10 @@ const Page = ({ params }: { params: { id: string } }) => {
 						<div
 							key={index}
 							className={cn(
-								"w-full flex gap-2",
-								message.role === "user" ? "flex-row-reverse" : "flex-row",
+								"w-[90%] flex gap-2",
+								message.role === "user"
+									? "flex-row-reverse self-end"
+									: "flex-row self-start",
 							)}
 						>
 							<Label>
@@ -103,7 +105,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 							/>
 						</div>
 					))}
-				<div className="w-full flex flex-row gap-2">
+				<div className="w-[90%] flex flex-row gap-2">
 					<Label>
 						<Moon color="yellow" />
 					</Label>
