@@ -93,7 +93,10 @@ export const chats = pgTable("chats", {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	title: text("title").notNull(),
-	contents: json("contents").$type<ChatCompletionResponse[]>().notNull(),
+	contents: json("contents")
+		.$type<ChatCompletionResponse[]>()
+		.array()
+		.notNull(),
 	user_id: text("user_id").notNull(),
 	created_at: timestamp("created_at").defaultNow(),
 });

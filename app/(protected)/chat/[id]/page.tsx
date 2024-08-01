@@ -10,7 +10,7 @@ import { Moon, User } from "lucide-react";
 import type { ChatCompletionMessageParam } from "mallam";
 import { useEffect, useRef, useState } from "react";
 
-const Page = () => {
+const Page = ({ params }: { params: { id: string } }) => {
 	const { chat, createChat } = useInitChatStore();
 	const [input, setInput] = useState<string>("");
 	const [output, setOutput] = useState<ChatCompletionMessageParam[]>([
@@ -19,13 +19,14 @@ const Page = () => {
 			content: chat,
 		},
 	]);
+
 	const { responses, startStream, isLoading } = useStreamResponse({
 		streamCallback: setOutput,
+		id: params.id,
 	});
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 	const responseRef = useRef<HTMLTextAreaElement>(null);
-	const historyRef = useRef<HTMLTextAreaElement>(null);
 
 	useQuery({
 		queryKey: ["init-chat"],
@@ -96,7 +97,7 @@ const Page = () => {
 							<Textarea
 								placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-fit"
-								ref={historyRef}
+								ref={inputRef}
 								readOnly
 								value={message.content}
 							/>

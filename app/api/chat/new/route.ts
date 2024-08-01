@@ -1,26 +1,35 @@
 import { db } from "@/drizzle";
 import { chats } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
-// import { mallam } from "@/lib/mallam";
+import { mallam } from "@/lib/mallam";
 import { type NextRequest, NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
 	const { input } = await request.json();
 
 	const session = await auth();
 
-	// const instruction = `Sila berikan tajuk yang sesuai kepada soalan berikut: ${input}`;
-	//
-	// const title = await mallam.chatCompletion(instruction);
+	const instruction = `Sila berikan tajuk yang sesuai kepada soalan berikut dalam 3 hingga 5 patah perkataan sahaja: ${input}`;
+
+	const title = await mallam.chatCompletion(instruction, {
+		model: "mallam-tiny",
+	});
+
+	const newContent = [
+		{
+			user: input,
+		},
+	];
 
 	if (session?.user?.id) {
 		// Insert the chat into the database
 		const res = await db
 			.insert(chats)
 			.values({
-				// title: title.message.trim(),
-				title: "Soalan",
-				contents: input.trim(),
+				title: title.message.trim(),
+				contents: newContent,
 				user_id: session?.user.id,
 			})
 			.returning({ id: chats.id, title: chats.title })

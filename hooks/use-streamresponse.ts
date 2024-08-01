@@ -31,10 +31,12 @@ function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 
 export const useStreamResponse = ({
 	streamCallback,
+	id,
 }: {
 	streamCallback: React.Dispatch<
 		React.SetStateAction<ChatCompletionMessageParam[]>
 	>;
+	id?: string;
 }) => {
 	const [responses, setResponses] = useState<string>("");
 	const { toast } = useToast();
@@ -44,7 +46,7 @@ export const useStreamResponse = ({
 			input,
 			history,
 		}: { input: string; history: ChatCompletionMessageParam[] }) => {
-			const response = await fetch("/api/mallam/soalan", {
+			const response = await fetch("/api/chat/ask", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -63,9 +65,9 @@ export const useStreamResponse = ({
 				.pipeThrough(new TextDecoderStream())
 				.getReader();
 
-			return reader;
+			return { reader, history, input };
 		},
-		onSuccess: async (reader) => {
+		onSuccess: async ({ reader }) => {
 			setResponses("");
 			while (true) {
 				const { value, done } = await reader.read();
@@ -89,11 +91,33 @@ export const useStreamResponse = ({
 					"Terdapat masalah semasa memuatkan soalan. Sila cuba lagi.",
 			});
 		},
-		onSettled: () => {
+		onSettled: async (data) => {
 			streamCallback((prev) => [
 				...prev,
 				{ role: "assistant", content: responses },
 			]);
+			const oldHistory = data?.history;
+			const newHistory: ChatCompletionMessageParam[] = [
+				{
+					role: "user",
+					content: data?.input as string,
+				},
+				{
+					role: "assistant",
+					content: responses,
+				},
+			];
+			const latestHistory = oldHistory?.concat(newHistory);
+			await fetch("/api/chat/update", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					input: latestHistory,
+					id,
+				}),
+			});
 		},
 	});
 	return { responses, startStream, isLoading };
