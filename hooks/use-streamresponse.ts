@@ -108,6 +108,7 @@ export const useStreamResponse = ({
 				},
 			];
 			const latestHistory = oldHistory?.concat(newHistory);
+			console.log("latestHistory: ", latestHistory);
 			await fetch("/api/chat/update", {
 				method: "POST",
 				headers: {

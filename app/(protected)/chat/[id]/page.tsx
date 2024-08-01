@@ -44,6 +44,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 			}
 		},
 		retry: false,
+		refetchOnWindowFocus: false,
 	});
 
 	// Resize input textarea based on input state

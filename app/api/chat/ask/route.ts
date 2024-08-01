@@ -8,10 +8,13 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
 	const { input, history } = await request.json();
 
+	console.log("input: ", input);
+	console.log("history: ", history);
+
 	const instruction: ChatCompletionMessageParam[] = [
 		{
 			role: "system",
-			content: `Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context yang diberikan: ${JSON.stringify(history)}`,
+			content: `Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context yang diberikan: ${JSON.stringify(history)}`,
 		},
 		{
 			role: "user",
