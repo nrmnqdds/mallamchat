@@ -1,6 +1,6 @@
 import { db } from "@/drizzle";
 import { chats } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -11,7 +11,10 @@ export async function GET(
 		.select()
 		.from(chats)
 		.where(eq(chats.user_id, params.id))
+		.orderBy(desc(chats.created_at))
 		.limit(5);
+
+	// console.log(res);
 
 	if (!res) {
 		return NextResponse.json({ error: "Chat not found" }, { status: 404 });

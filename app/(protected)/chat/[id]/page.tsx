@@ -30,12 +30,19 @@ const Page = ({ params }: { params: { id: string } }) => {
 
 	useQuery({
 		queryKey: ["init-chat"],
-		// queryFn: async () => await sendChat(chat),
 		queryFn: async () => {
-			startStream({ input: chat, history: [] });
-			createChat("");
+			const res = await fetch(`/api/chat/${params.id}`);
+			const json = await res.json();
+			if (json.contents.length > 1) {
+				setOutput(json.contents);
+				createChat("");
+			} else {
+				startStream({
+					input: chat,
+					history: json.contents.length > 1 ? json : [],
+				});
+			}
 		},
-		enabled: !!chat,
 		retry: false,
 	});
 
@@ -80,7 +87,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
 	return (
 		<div className="h-full w-full flex flex-col items-center justify-center">
-			<div className="mt-5 gap-5 w-full max-w-2xl flex flex-col">
+			<div className="h-full mt-5 gap-5 w-full max-w-2xl flex flex-col">
 				{output
 					.filter((msg) => msg.content !== responses)
 					.map((message, index) => (
@@ -99,7 +106,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 							<Textarea
 								placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-fit"
-								ref={inputRef}
+								// ref={inputRef}
 								readOnly
 								value={message.content}
 							/>
