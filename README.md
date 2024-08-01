@@ -11,3 +11,5 @@ how to start?:
 ```
 npm run generate && npm run migrate
 ```
+
+> beta version can be found at <https://beta.mallam.chat>
