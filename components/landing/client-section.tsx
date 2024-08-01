@@ -1,3 +1,4 @@
+import DETA from "@/assets/images/Logo DeTA.svg";
 import MESOLITICA from "@/assets/images/mesolitica-transparent.png";
 import NOUNS from "@/assets/images/nouns.svg";
 import Image from "next/image";
@@ -12,6 +13,11 @@ const powered = [
 		id: 1,
 		name: "Mesolitica",
 		logo: MESOLITICA,
+	},
+	{
+		id: 2,
+		name: "DeTA",
+		logo: DETA,
 	},
 ];
 
