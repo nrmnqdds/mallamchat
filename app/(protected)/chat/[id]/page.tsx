@@ -24,7 +24,8 @@ const Page = () => {
 	});
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const outputRef = useRef<HTMLTextAreaElement>(null);
+	const responseRef = useRef<HTMLTextAreaElement>(null);
+	const historyRef = useRef<HTMLTextAreaElement>(null);
 
 	useQuery({
 		queryKey: ["init-chat"],
@@ -59,7 +60,7 @@ const Page = () => {
 	// Resize output textarea based on output state
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <Nak resize output textarea based on output state>
 	useEffect(() => {
-		const textarea = outputRef.current;
+		const textarea = responseRef.current;
 		if (textarea) {
 			const adjustHeight = () => {
 				textarea.style.height = "auto";
@@ -82,18 +83,24 @@ const Page = () => {
 				{output
 					.filter((msg) => msg.content !== responses)
 					.map((message, index) => (
-						<div key={index} className="w-full">
+						<div
+							key={index}
+							className={cn(
+								"w-full flex gap-2",
+								message.role === "user" ? "flex-row-reverse" : "flex-row",
+							)}
+						>
 							<Label>{message.role === "user" ? <User /> : <Moon />}</Label>
 							<Textarea
 								placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
-								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
+								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-fit"
+								ref={historyRef}
 								readOnly
-								ref={outputRef}
 								value={message.content}
 							/>
 						</div>
 					))}
-				<div className="w-full">
+				<div className="w-full flex flex-row gap-2">
 					<Label>
 						<Moon />
 					</Label>
@@ -101,45 +108,40 @@ const Page = () => {
 						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
 						readOnly
-						ref={outputRef}
+						ref={responseRef}
 						value={responses}
 					/>
 				</div>
 				<form className="mt-10">
-					<div>
-						<div className="relative">
-							<Textarea
-								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
-								placeholder="Apa yang boleh MaLLaM bantu anda hari ini?"
-								ref={inputRef}
-								value={input}
-								onChange={(e) => setInput(e.target.value)}
-								onKeyDown={async (e) => {
-									if (e.key === "Enter" && !e.shiftKey) {
-										e.preventDefault();
-										setOutput((prev) => [
-											...prev,
-											{ role: "user", content: input },
-										]);
-										await startStream(input);
-										setInput("");
-									}
-								}}
-							/>
-							<div
-								className={cn(
-									"bottom-2 right-2",
-									input ? "absolute" : "hidden",
-								)}
-							>
-								<p className="text-foreground text-xs">
-									Use{" "}
-									<span className="bg-zinc-700 px-1 rounded-full">
-										shift + return
-									</span>{" "}
-									for new line
-								</p>
-							</div>
+					<div className="relative">
+						<Textarea
+							className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
+							placeholder="Apa yang boleh MaLLaM bantu anda hari ini?"
+							ref={inputRef}
+							value={input}
+							onChange={(e) => setInput(e.target.value)}
+							onKeyDown={async (e) => {
+								if (e.key === "Enter" && !e.shiftKey) {
+									e.preventDefault();
+									setOutput((prev) => [
+										...prev,
+										{ role: "user", content: input },
+									]);
+									await startStream(input);
+									setInput("");
+								}
+							}}
+						/>
+						<div
+							className={cn("bottom-2 right-2", input ? "absolute" : "hidden")}
+						>
+							<p className="text-foreground text-xs">
+								Use{" "}
+								<span className="bg-zinc-700 px-1 rounded-full">
+									shift + return
+								</span>{" "}
+								for new line
+							</p>
 						</div>
 					</div>
 				</form>
