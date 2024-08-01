@@ -1,14 +1,29 @@
-<svg width="35" height="14" viewBox="0 0 35 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M17.2054 2.69962H12.9051L12.905 9.14985H17.2054L17.2054 2.69962Z" fill="#D9D9D9"/>
-<path d="M17.2054 9.14985H12.905V11.3004H17.2054V9.14985Z" fill="#D9D9D9"/>
-<path d="M27.957 2.6998H32.2573V11.3005H27.957V2.6998Z" fill="#D9D9D9"/>
-<path d="M6.45562 0.5495H19.3568L19.3569 4.84955H21.5073V2.70007H23.6575L23.6573 6.99975H17.2067V2.6997H8.60581L8.60593 6.99975H2.15532V9.14977H0.00512695V4.84955H6.45562V0.5495Z" fill="#D9D9D9"/>
-<path d="M6.45562 7.00013L8.60593 6.99975L8.60581 9.15032H6.45562V7.00013Z" fill="#D9D9D9"/>
-<path d="M19.3569 7.00013L17.2067 6.99975V11.3002H8.60595L8.60581 9.15032H6.45562L6.45576 13.4504H19.357L19.3569 7.00013Z" fill="#D9D9D9"/>
-<path d="M21.5072 7.00013L23.6573 6.99975L23.6574 9.15032H21.5072V7.00013Z" fill="#D9D9D9"/>
-<path d="M2.15532 9.1507H0.00512695V11.3009H2.15532V9.1507Z" fill="#D9D9D9"/>
-<path d="M21.5072 9.15032H23.6574V11.3001H32.2579V9.15075H34.4081L34.4085 13.4503H21.5073L21.5072 9.15032Z" fill="#D9D9D9"/>
-<path d="M34.4085 0.5495H21.5073L21.5073 2.70007L34.4085 2.6997V0.5495Z" fill="#D9D9D9"/>
-<path d="M34.4081 2.69997H32.2579V6.99978H34.4081V2.69997Z" fill="#D9D9D9"/>
-<path d="M34.4081 6.99978H32.2579V9.15025H34.4081V6.99978Z" fill="#D9D9D9"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 60">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #000;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: red;
+      }
+
+      .cls-3 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1" shape-rendering="crispEdges">
+    <path class="cls-2" d="M100,0v20h-10V0H30v20H0v30h10v-20h20v30h60v-30h10v30h60V0h-60ZM80,50h-40V10h40v40ZM150,50h-40V10h40v40Z"/>
+    <rect class="cls-3" x="40" y="10" width="20" height="40"/>
+    <rect class="cls-1" x="60" y="10" width="20" height="40"/>
+    <rect class="cls-3" x="110" y="10" width="20" height="40"/>
+    <rect class="cls-1" x="130" y="10" width="20" height="40"/>
+  </g>
 </svg>

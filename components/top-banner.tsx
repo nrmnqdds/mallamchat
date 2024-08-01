@@ -6,7 +6,7 @@ const TopBanner = () => {
 	return (
 		<div className="w-full bg-blue-500 p-2 flex items-center justify-center">
 			{/* <p>{window.location.toString()}</p> */}
-			{window.location.toString().includes("localhost") && (
+			{window.location.toString().includes("nrmnqdds") && (
 				<p className="font-bold">
 					🚧 Do visit our new website at{" "}
 					<Link

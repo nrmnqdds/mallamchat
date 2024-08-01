@@ -6,14 +6,12 @@ export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-	const { input } = await request.json();
-	console.log(input);
+	const { input, prev } = await request.json();
 
 	const instruction: ChatCompletionMessageParam[] = [
 		{
 			role: "system",
-			content:
-				"Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut.",
+			content: `Anda adalah MaLLaM, pembantu AI yang boleh membantu menjawab soalan pengguna. Sila jawab soalan berikut berdasarkan context yang diberikan: ${prev}`,
 		},
 		{
 			role: "user",
@@ -22,7 +20,7 @@ export async function POST(request: NextRequest) {
 	];
 
 	const result = await mallam.chatCompletion(instruction, {
-		model: "mallam-tiny",
+		// model: "mallam-tiny",
 		stream: true,
 		max_tokens: 1000,
 	});
