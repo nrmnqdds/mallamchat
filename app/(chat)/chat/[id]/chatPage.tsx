@@ -10,7 +10,7 @@ import { Moon, User } from "lucide-react";
 import type { ChatCompletionMessageParam } from "mallam";
 import { useEffect, useRef, useState } from "react";
 
-const Page = ({ params }: { params: { id: string } }) => {
+const ChatPage = ({ id }: { id: string }) => {
 	const { chat, createChat } = useInitChatStore();
 	const [input, setInput] = useState<string>("");
 	const [output, setOutput] = useState<ChatCompletionMessageParam[]>([
@@ -22,7 +22,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
 	const { responses, startStream, isLoading } = useStreamResponse({
 		streamCallback: setOutput,
-		id: params.id,
+		id,
 	});
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -31,7 +31,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 	useQuery({
 		queryKey: ["init-chat"],
 		queryFn: async () => {
-			const res = await fetch(`/api/chat/${params.id}`);
+			const res = await fetch(`/api/chat/${id}`);
 			const json = await res.json();
 			if (json.contents.length > 1) {
 				setOutput(json.contents);
@@ -163,4 +163,4 @@ const Page = ({ params }: { params: { id: string } }) => {
 	);
 };
 
-export default Page;
+export default ChatPage;
