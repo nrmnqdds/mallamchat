@@ -90,7 +90,9 @@ const Page = () => {
 								message.role === "user" ? "flex-row-reverse" : "flex-row",
 							)}
 						>
-							<Label>{message.role === "user" ? <User /> : <Moon />}</Label>
+							<Label>
+								{message.role === "user" ? <User /> : <Moon color="yellow" />}
+							</Label>
 							<Textarea
 								placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
 								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-fit"
@@ -102,7 +104,7 @@ const Page = () => {
 					))}
 				<div className="w-full flex flex-row gap-2">
 					<Label>
-						<Moon />
+						<Moon color="yellow" />
 					</Label>
 					<Textarea
 						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
