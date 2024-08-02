@@ -1,5 +1,5 @@
 {
-	"name": "tatabahasaly",
+	"name": "mallamchat",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -36,6 +36,7 @@
 		"next-auth": "^5.0.0-beta.19",
 		"next-themes": "^0.3.0",
 		"postgres": "^3.4.4",
+		"posthog-js": "^1.154.1",
 		"react": "^18",
 		"react-dom": "^18",
 		"react-hook-form": "^7.52.1",

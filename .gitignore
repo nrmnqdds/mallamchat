@@ -41,3 +41,6 @@ next-env.d.ts
 **/*.sql
 **/*journal.json
 **/*snapshot.json
+
+# million things
+.million
