@@ -15,51 +15,51 @@ import { WebVitals } from "@/components/web-vitals";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MaLLaM Chat",
-  description:
-    "Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+	title: "MaLLaM Chat",
+	description:
+		"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
 };
 
 export default async function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  const session = await auth();
+	const session = await auth();
 
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          inter.className,
-          "min-h-screen bg-background antialiased",
-        )}
-      >
-        <PosthogProvider>
-          <QueryProvider>
-            <SessionProvider session={session}>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="dark"
-                disableTransitionOnChange
-              >
-                <TopBanner />
-                {children}
-                <Toaster />
-                <Particles
-                  className="absolute inset-0 -z-10"
-                  quantity={50}
-                  ease={70}
-                  size={0.05}
-                  staticity={40}
-                  color="#ffffff"
-                />
-                <WebVitals />
-              </ThemeProvider>
-            </SessionProvider>
-          </QueryProvider>
-        </PosthogProvider>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en" suppressHydrationWarning>
+			<body
+				className={cn(
+					inter.className,
+					"min-h-screen bg-background antialiased",
+				)}
+			>
+				<PosthogProvider>
+					<QueryProvider>
+						<SessionProvider session={session}>
+							<ThemeProvider
+								attribute="class"
+								defaultTheme="dark"
+								disableTransitionOnChange
+							>
+								<TopBanner />
+								{children}
+								<Toaster />
+								<Particles
+									className="absolute inset-0 -z-10"
+									quantity={50}
+									ease={70}
+									size={0.05}
+									staticity={40}
+									color="#ffffff"
+								/>
+								<WebVitals />
+							</ThemeProvider>
+						</SessionProvider>
+					</QueryProvider>
+				</PosthogProvider>
+			</body>
+		</html>
+	);
 }
