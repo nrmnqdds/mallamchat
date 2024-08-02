@@ -53,7 +53,7 @@ export const useStreamResponse = ({
 				},
 				body: JSON.stringify({
 					input,
-					history: history.slice(Math.max(history.length - 2, 1)),
+					history: history.slice(Math.max(history.length - 4, 1)),
 				}),
 			});
 
