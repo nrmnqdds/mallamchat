@@ -104,13 +104,9 @@ const ChatPage = ({ id }: { id: string }) => {
 							<Label>
 								{message.role === "user" ? <User /> : <Moon color="yellow" />}
 							</Label>
-							<Textarea
-								placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
-								className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-fit"
-								// ref={inputRef}
-								readOnly
-								value={message.content}
-							/>
+							<div className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background">
+								{message.content}
+							</div>
 						</div>
 					))}
 				<div className="w-[90%] flex flex-row gap-2">

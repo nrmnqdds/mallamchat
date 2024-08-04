@@ -29,13 +29,13 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<body
-				className={cn(
-					inter.className,
-					"min-h-screen bg-background antialiased",
-				)}
-			>
-				<PosthogProvider>
+			<PosthogProvider>
+				<body
+					className={cn(
+						inter.className,
+						"min-h-screen bg-background antialiased",
+					)}
+				>
 					<QueryProvider>
 						<SessionProvider session={session}>
 							<ThemeProvider
@@ -58,8 +58,8 @@ export default async function RootLayout({
 							</ThemeProvider>
 						</SessionProvider>
 					</QueryProvider>
-				</PosthogProvider>
-			</body>
+				</body>
+			</PosthogProvider>
 		</html>
 	);
 }
