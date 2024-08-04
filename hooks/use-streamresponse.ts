@@ -4,7 +4,6 @@ import type {
 	ChatCompletionMessageParam,
 	ChatCompletionResponse,
 } from "mallam";
-import posthog from "posthog-js";
 import { useState } from "react";
 
 // Current workaround for parsing malformed JSON
@@ -86,7 +85,6 @@ export const useStreamResponse = ({
 		},
 		onError: (error) => {
 			console.error(error);
-			posthog.capture("Masalah Dalaman", { property: error });
 			toast({
 				title: "Masalah Dalaman",
 				description:
