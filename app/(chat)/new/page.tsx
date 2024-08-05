@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
+import { Send } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -176,7 +178,20 @@ const Page = () => {
 							</div>
 							<div
 								className={cn(
-									"bottom-2 right-2",
+									"top-2 right-2",
+									form.getValues("input") ? "absolute" : "hidden",
+								)}
+							>
+								<Button
+									type="submit"
+									className="size-8 self-end flex items-center justify-center relative"
+								>
+									<Send className="absolute" size={15} />
+								</Button>
+							</div>
+							<div
+								className={cn(
+									"bottom-2 right-2 flex flex-col",
 									form.getValues("input") ? "absolute" : "hidden",
 								)}
 							>

@@ -70,7 +70,7 @@ export default function HeroSection() {
 						autoPlay
 						preload="none"
 						loop
-						src="https://r2.studyjom.nrmnqdds.com/mallam-demo7.mp4"
+						src="https://r2.studyjom.nrmnqdds.com/mallam-demo9.mp4"
 						muted
 						className="relative block size-full rounded-[inherit] border object-contain"
 					/>

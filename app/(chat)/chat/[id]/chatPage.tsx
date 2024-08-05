@@ -1,12 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useInitChatStore } from "@/hooks/use-initchat";
 import { useStreamResponse } from "@/hooks/use-streamresponse";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { Moon, User } from "lucide-react";
+import { Moon, Send, User } from "lucide-react";
 import type { ChatCompletionMessageParam } from "mallam";
 import { useEffect, useRef, useState } from "react";
 
@@ -121,7 +122,7 @@ const ChatPage = ({ id }: { id: string }) => {
 						value={responses}
 					/>
 				</div>
-				<form className="mt-10">
+				<form className="mt-10 w-[90%]">
 					<div className="relative">
 						<Textarea
 							className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
@@ -141,6 +142,14 @@ const ChatPage = ({ id }: { id: string }) => {
 								}
 							}}
 						/>
+						<div className={cn("top-2 right-2", input ? "absolute" : "hidden")}>
+							<Button
+								type="submit"
+								className="size-8 self-end flex items-center justify-center relative"
+							>
+								<Send className="absolute" size={15} />
+							</Button>
+						</div>
 						<div
 							className={cn("bottom-2 right-2", input ? "absolute" : "hidden")}
 						>
