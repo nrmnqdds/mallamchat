@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/providers/session-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
+import type { Viewport } from "next";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
@@ -12,6 +13,13 @@ import "./globals.css";
 import TopBanner from "@/components/top-banner";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: "device-width",
+	maximumScale: 1,
+	viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
 	title: "MaLLaM Chat",

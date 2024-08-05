@@ -122,7 +122,7 @@ const ChatPage = ({ id }: { id: string }) => {
 						value={responses}
 					/>
 				</div>
-				<form className="mt-10 w-[90%]">
+				<form className="mt-10 w-[90%] self-center">
 					<div className="relative">
 						<Textarea
 							className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
