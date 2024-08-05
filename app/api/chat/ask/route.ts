@@ -8,24 +8,22 @@ export const dynamic = "force-dynamic";
 export async function POST(request: NextRequest) {
 	const { input, history } = await request.json();
 
-	console.log("input: ", input);
-	console.log("history: ", history);
+	const fullPrompt = history.concat({ role: "user", content: input });
+	console.log(fullPrompt);
 
 	const instruction: ChatCompletionMessageParam[] = [
 		{
 			role: "system",
-			content: `Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context dari perbualan yang diberikan: ${JSON.stringify(history)}`,
+			content:
+				"Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context dari perbualan yang diberikan. Jangan tanya apa apa yang tiada kena mengena dengan konteks melainkan user sendiri yang tanya",
 		},
-		{
-			role: "user",
-			content: input,
-		},
+		...fullPrompt,
 	];
 
 	const result = await mallam.chatCompletion(instruction, {
 		// model: "mallam-tiny",
 		stream: true,
-		max_tokens: 50000,
+		max_tokens: 500,
 	});
 
 	return new NextResponse(result, {
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
 			"Transfer-Encoding": "chunked",
 			"Content-Encoding": "none",
 			"Cache-Control": "no-cache, no-transform",
-			"Content-Type": "string/event-stream; charset=utf-8",
+			"Content-Type": "text/event-stream; charset=utf-8",
 		},
 	});
 }
