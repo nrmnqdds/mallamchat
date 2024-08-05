@@ -2,22 +2,26 @@ import DETA from "@/assets/images/Logo DeTA.svg";
 import MESOLITICA from "@/assets/images/mesolitica-transparent.png";
 import NOUNS from "@/assets/images/nouns.svg";
 import Image from "next/image";
+import Link from "next/link";
 
 const powered = [
 	{
 		id: 0,
 		name: "Nouns",
 		logo: NOUNS,
+		url: "https://nouns.wtf/",
 	},
 	{
 		id: 1,
 		name: "Mesolitica",
 		logo: MESOLITICA,
+		url: "https://mesolitica.com/",
 	},
 	{
 		id: 2,
 		name: "DeTA",
 		logo: DETA,
+		url: "https://plashspeed-aiman.github.io/#/gerakan",
 	},
 ];
 
@@ -36,13 +40,20 @@ export default function ClientSection() {
 						<ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 md:gap-x-16 [&_path]:fill-white">
 							{powered.map((client) => (
 								<li key={client.id}>
-									<Image
-										src={client.logo}
-										alt={client.name}
-										width={200}
-										height={200}
-										className="object-contain"
-									/>
+									<Link
+										href={client.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="flex items-center justify-center transition-all duration-150 hover:scale-105"
+									>
+										<Image
+											src={client.logo}
+											alt={client.name}
+											width={200}
+											height={200}
+											className="object-contain"
+										/>
+									</Link>
 								</li>
 							))}
 						</ul>
