@@ -13,9 +13,12 @@ import type { Session } from "next-auth";
 const UserDropdown = ({ user }: { user: Session["user"] }) => {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger>
+			<DropdownMenuTrigger aria-label="User Dropdown">
 				<Avatar>
-					<AvatarImage src={user?.image || "https://github.com/shadcn.png"} />
+					<AvatarImage
+						src={user?.image || "https://github.com/shadcn.png"}
+						alt="Profile Picture"
+					/>
 					<AvatarFallback>{user?.name}</AvatarFallback>
 				</Avatar>
 			</DropdownMenuTrigger>

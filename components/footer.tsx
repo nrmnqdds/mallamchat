@@ -1,7 +1,4 @@
-// import GITHUB from "@/assets/icons/github.svg";
-// import X from "@/assets/icons/x.svg";
 import { Github, Twitter } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 const socials = [
@@ -36,7 +33,7 @@ export default function Footer() {
 					))}
 				</div>
 				<div className="mt-8 md:order-1 md:mt-0">
-					<p className="text-center text-xs leading-5 text-gray-500">
+					<p className="text-center text-xs leading-5 text-foreground">
 						&copy; 2024 nrmnqdds. All rights reserved.
 					</p>
 				</div>
