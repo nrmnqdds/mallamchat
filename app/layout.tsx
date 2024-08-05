@@ -10,7 +10,6 @@ import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import TopBanner from "@/components/top-banner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,7 +53,6 @@ export default async function RootLayout({
 							defaultTheme="dark"
 							disableTransitionOnChange
 						>
-							<TopBanner />
 							{children}
 							<Toaster />
 							<Particles
