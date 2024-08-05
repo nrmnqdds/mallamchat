@@ -213,7 +213,7 @@ const Page = () => {
 						>
 							Contoh prompt yang boleh digunakan:
 						</motion.h1>
-						<div className="flex flex-row items-center justify-between gap-2 mt-5">
+						<div className="flex flex-row items-center justify-between space-x-2 mt-5">
 							{contohPrompt.map((prompt) => (
 								<MotionCard
 									key={prompt.key}
@@ -221,7 +221,7 @@ const Page = () => {
 									initial="hidden"
 									animate="visible"
 									whileHover={{ scale: 1.05 }}
-									className="p-2 bg-zinc-800 cursor-pointer rounded-xl text-center"
+									className="p-2 bg-zinc-800 cursor-pointer rounded-xl text-center h-full"
 									onClick={() => {
 										form.setValue("input", prompt.value);
 										form.handleSubmit(() =>
@@ -229,7 +229,7 @@ const Page = () => {
 										)();
 									}}
 								>
-									<h1>{prompt.value}</h1>
+									<h1 className="text-xs md:text-base">{prompt.value}</h1>
 								</MotionCard>
 							))}
 						</div>
