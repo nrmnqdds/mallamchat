@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 		url: "https://mallam.chat",
 		title: "Mallam Chat",
 		description:
-			"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+			"Chat with Malaysian AI about anything within Malaysian context.",
 		siteName: "Mallam Chat",
 		images: "https://r2.studyjom.nrmnqdds.com/mallamchatog.png",
 	},
@@ -40,8 +40,8 @@ export const metadata: Metadata = {
 		creator: "@nrmnqdds",
 		title: "Mallam Chat",
 		description:
-			"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
-		images: "https://r2.studyjom.nrmnqdds.com/mallamchattwitterog.png",
+			"Chat with Malaysian AI about anything within Malaysian context.",
+		images: "https://r2.studyjom.nrmnqdds.com/mallamchatog.png",
 	},
 };
 
