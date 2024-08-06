@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 		{
 			role: "system",
 			content:
-				"Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan dalam bahasa Melayu berdasarkan context dari perbualan yang diberikan. Jangan tanya apa apa yang tiada kena mengena dengan konteks melainkan user sendiri yang tanya",
+				"Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan berdasarkan context dari perbualan yang diberikan. Jangan tanya apa apa yang tiada kena mengena dengan konteks melainkan user sendiri yang tanya",
 		},
 		...fullPrompt,
 	];

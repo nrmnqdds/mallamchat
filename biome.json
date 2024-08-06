@@ -10,12 +10,13 @@
 			"suspicious": {
 				"noArrayIndexKey": "off"
 			}
-		}
+		},
+		"ignore": [".next", "node_modules"]
 	},
 	"formatter": {
 		"enabled": true,
 		"formatWithErrors": false,
-		"ignore": [],
+		"ignore": [".next", "node_modules"],
 		"attributePosition": "auto",
 		"indentStyle": "tab",
 		"indentWidth": 2,
