@@ -11,11 +11,22 @@ export async function POST(request: NextRequest) {
 
 	const session = await auth();
 
-	const instruction = `Sila berikan tajuk yang sesuai kepada soalan berikut dalam 3 hingga 5 patah perkataan sahaja: ${input}`;
-
-	const title = await mallam.chatCompletion(instruction, {
-		model: "mallam-tiny",
-	});
+	const title = await mallam.chatCompletion(
+		[
+			{
+				role: "system",
+				content:
+					"Sila berikan tajuk yang sesuai kepada soalan berikut dalam 3 hingga 5 patah perkataan sahaja. Contoh: 'Bagaimana cara membuat kuih lapis?'",
+			},
+			{
+				role: "user",
+				content: input,
+			},
+		],
+		{
+			model: "mallam-tiny",
+		},
+	);
 
 	const newContent = [
 		{
