@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
 	title: "MaLLaM Chat",
 	description:
-		"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+		"Chat with Malaysian AI about anything within Malaysian context.",
 	metadataBase: new URL("https://mallam.chat/"),
 	openGraph: {
 		type: "website",

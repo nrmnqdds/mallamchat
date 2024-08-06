@@ -32,8 +32,8 @@ jobs:
         with:
           push: true
           tags: ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=ghcr.io/nrmnqdds/mallamchat:cache
+          cache-to: type=registry,mode=max,ref=ghcr.io/nrmnqdds/mallamchat:cache,image-manifest=true
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
