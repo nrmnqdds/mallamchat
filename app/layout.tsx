@@ -24,6 +24,25 @@ export const metadata: Metadata = {
 	title: "MaLLaM Chat",
 	description:
 		"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+	metadataBase: new URL("https://mallam.chat/"),
+	openGraph: {
+		type: "website",
+		url: "https://mallam.chat",
+		title: "Mallam Chat",
+		description:
+			"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+		siteName: "Mallam Chat",
+		images: "https://r2.studyjom.nrmnqdds.com/mallamchatog.png",
+	},
+	twitter: {
+		card: "summary_large_image",
+		site: "@nrmnqdds",
+		creator: "@nrmnqdds",
+		title: "Mallam Chat",
+		description:
+			"Kecerdasan buatan yang boleh membantu menjawab soalan pengguna.",
+		images: "https://r2.studyjom.nrmnqdds.com/mallamchattwitterog.png",
+	},
 };
 
 export default async function RootLayout({
