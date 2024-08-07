@@ -15,6 +15,10 @@ const nextConfig = {
 			fullUrl: true,
 		},
 	},
+
+	experimental: {
+		mdxRs: true,
+	},
 };
 
 export default nextConfig;
