@@ -6,10 +6,7 @@ import type {
 } from "mallam";
 import { useState } from "react";
 
-// Current workaround for parsing malformed JSON
 function parsemalformedJSON(str: string): ChatCompletionResponse[] {
-	// Split the string into separate JSON objects
-	// I write this myself trust me
 	const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
 	const jsonObjects = str.match(regex);
 
@@ -17,16 +14,22 @@ function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 		throw new Error("No valid JSON objects found in the string");
 	}
 
-	// Parse each object and return the array
-	return jsonObjects.map((obj) => {
-		const parsed = JSON.parse(obj) as ChatCompletionResponse;
-		if (typeof parsed.id !== "string" || typeof parsed.message !== "string") {
-			throw new Error(
-				"Parsed object does not match ChatCompletionResponse interface",
-			);
-		}
-		return parsed;
-	});
+	return jsonObjects
+		.map((obj) => {
+			console.log(obj);
+			try {
+				const parsed = JSON.parse(obj) as ChatCompletionResponse;
+				return parsed;
+			} catch (error) {
+				console.error(`Failed to parse object: ${obj}`);
+				console.error(`Error: ${error}`);
+				return {
+					id: "err",
+					message: obj,
+				};
+			}
+		})
+		.filter((obj): obj is ChatCompletionResponse => obj !== null);
 }
 
 export const useStreamResponse = ({
@@ -40,6 +43,25 @@ export const useStreamResponse = ({
 }) => {
 	const [responses, setResponses] = useState<string>("");
 	const { toast } = useToast();
+
+	const updateChatHistory = useMutation({
+		mutationKey: ["update-history"],
+		mutationFn: async ({
+			latestHistory,
+			id,
+		}: { latestHistory: ChatCompletionMessageParam[]; id: string }) => {
+			await fetch("/api/chat/update", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					input: latestHistory,
+					id,
+				}),
+			});
+		},
+	});
 
 	const { mutateAsync: startStream, isPending: isLoading } = useMutation({
 		mutationFn: async ({
@@ -108,17 +130,23 @@ export const useStreamResponse = ({
 				},
 			];
 			const latestHistory = oldHistory?.concat(newHistory);
+
+			if (!id || !latestHistory) {
+				return;
+			}
+
+			await updateChatHistory.mutateAsync({ latestHistory, id });
 			// console.log("latestHistory: ", latestHistory);
-			await fetch("/api/chat/update", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					input: latestHistory,
-					id,
-				}),
-			});
+			// await fetch("/api/chat/update", {
+			// 	method: "POST",
+			// 	headers: {
+			// 		"Content-Type": "application/json",
+			// 	},
+			// 	body: JSON.stringify({
+			// 		input: latestHistory,
+			// 		id,
+			// 	}),
+			// });
 		},
 	});
 	return { responses, startStream, isLoading };

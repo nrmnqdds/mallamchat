@@ -9,6 +9,9 @@
 			"recommended": true,
 			"suspicious": {
 				"noArrayIndexKey": "off"
+			},
+			"correctness": {
+				"noChildrenProp": "off"
 			}
 		},
 		"ignore": [".next", "node_modules"]

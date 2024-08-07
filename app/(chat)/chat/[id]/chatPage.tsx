@@ -10,6 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Moon, Send, User } from "lucide-react";
 import type { ChatCompletionMessageParam } from "mallam";
 import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import remarkGfm from "remark-gfm";
 
 const ChatPage = ({ id }: { id: string }) => {
 	const { chat, createChat } = useInitChatStore();
@@ -21,13 +25,12 @@ const ChatPage = ({ id }: { id: string }) => {
 		},
 	]);
 
-	const { responses, startStream, isLoading } = useStreamResponse({
+	const { responses, startStream } = useStreamResponse({
 		streamCallback: setOutput,
 		id,
 	});
 
 	const inputRef = useRef<HTMLTextAreaElement>(null);
-	const responseRef = useRef<HTMLTextAreaElement>(null);
 
 	useQuery({
 		queryKey: ["init-chat"],
@@ -67,26 +70,6 @@ const ChatPage = ({ id }: { id: string }) => {
 		}
 	}, []);
 
-	// Resize output textarea based on output state
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <Nak resize output textarea based on output state>
-	useEffect(() => {
-		const textarea = responseRef.current;
-		if (textarea) {
-			const adjustHeight = () => {
-				textarea.style.height = "auto";
-				textarea.style.height = `${textarea.scrollHeight}px`;
-			};
-
-			textarea.addEventListener("input", adjustHeight);
-
-			adjustHeight();
-
-			return () => {
-				textarea.removeEventListener("input", adjustHeight);
-			};
-		}
-	}, [responses]);
-
 	return (
 		<div className="h-full w-full flex flex-col items-center justify-center">
 			<div className="h-full mt-5 gap-5 w-full max-w-2xl flex flex-col">
@@ -105,23 +88,71 @@ const ChatPage = ({ id }: { id: string }) => {
 							<Label>
 								{message.role === "user" ? <User /> : <Moon color="yellow" />}
 							</Label>
-							<div className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background">
-								{message.content}
+							<div>
+								<Markdown
+									remarkPlugins={[remarkGfm]}
+									className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background"
+									children={message.content}
+									components={{
+										code(props) {
+											const { children, className, node, ...rest } = props;
+											const match = /language-(\w+)/.exec(className || "");
+											return match ? (
+												//@ts-ignore
+												<SyntaxHighlighter
+													{...rest}
+													wrapLongLines={true}
+													PreTag="div"
+													children={String(children).replace(/\n$/, "")}
+													language={match[1]}
+													style={dracula}
+												/>
+											) : (
+												<code {...rest} className={className}>
+													{children}
+												</code>
+											);
+										},
+									}}
+								/>
 							</div>
 						</div>
 					))}
-				<div className="w-[90%] flex flex-row gap-2">
-					<Label>
-						<Moon color="yellow" />
-					</Label>
-					<Textarea
-						placeholder={isLoading ? "Sedang memproses..." : "Hasil Tanya"}
-						className="rounded-xl bg-zinc-900 resize-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 h-auto"
-						readOnly
-						ref={responseRef}
-						value={responses}
-					/>
-				</div>
+				{responses && (
+					<div className="w-[90%] flex flex-row gap-2">
+						<Label>
+							<Moon color="yellow" />
+						</Label>
+						<div>
+							<Markdown
+								remarkPlugins={[remarkGfm]}
+								className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background"
+								children={responses}
+								components={{
+									code(props) {
+										const { children, className, node, ...rest } = props;
+										const match = /language-(\w+)/.exec(className || "");
+										return match ? (
+											//@ts-ignore
+											<SyntaxHighlighter
+												{...rest}
+												wrapLongLines={true}
+												PreTag="div"
+												children={String(children).replace(/\n$/, "")}
+												language={match[1]}
+												style={dracula}
+											/>
+										) : (
+											<code {...rest} className={className}>
+												{children}
+											</code>
+										);
+									},
+								}}
+							/>
+						</div>
+					</div>
+				)}
 				<form className="mt-10 w-[90%] self-center">
 					<div className="relative">
 						<Textarea
