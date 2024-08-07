@@ -1,8 +1,3 @@
-import createMDX from "@next/mdx";
-import rehypeHighlight from "rehype-highlight";
-import remarkGfm from "remark-gfm";
-import remarkPrism from "remark-prism";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	// For docker purpose
@@ -24,18 +19,9 @@ const nextConfig = {
 		},
 	},
 
-	// experimental: {
-	// 	mdxRs: true,
-	// },
+	experimental: {
+		mdxRs: true,
+	},
 };
 
-const withMDX = createMDX({
-	// extension: /\.mdx?$/,
-	// Add markdown plugins here, as desired
-	options: {
-		remarkPlugins: [remarkPrism, remarkGfm],
-		rehypePlugins: [rehypeHighlight],
-	},
-});
-
-export default withMDX(nextConfig);
+export default nextConfig;

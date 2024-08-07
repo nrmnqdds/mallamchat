@@ -1,6 +1,5 @@
 "use client";
 
-import MDXDiv from "@/components/mdx-div.mdx";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +10,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Moon, Send, User } from "lucide-react";
 import type { ChatCompletionMessageParam } from "mallam";
 import { useEffect, useRef, useState } from "react";
+import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import remarkGfm from "remark-gfm";
 
 const ChatPage = ({ params }: { params: { id: string } }) => {
 	const { chat, createChat } = useInitChatStore();
@@ -93,8 +96,36 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 								<Label>
 									{message.role === "user" ? <User /> : <Moon color="yellow" />}
 								</Label>
-								<div className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background">
-									<MDXDiv text={message.content} />
+								<div>
+									<Markdown
+										remarkPlugins={[remarkGfm]}
+										className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background"
+										children={message.content}
+										components={{
+											code(props) {
+												const { children, className, node, ...rest } = props;
+												const match = /language-(\w+)/.exec(className || "");
+												return match ? (
+													//@ts-ignore
+													<SyntaxHighlighter
+														{...rest}
+														wrapLongLines={true}
+														PreTag="div"
+														children={String(children).replace(/\n$/, "")}
+														language={match[1]}
+														style={dracula}
+													/>
+												) : (
+													<code
+														{...rest}
+														className={cn("font-space", className)}
+													>
+														{String(children) || "Sedang memproses..."}
+													</code>
+												);
+											},
+										}}
+									/>
 								</div>
 							</div>
 						);
@@ -104,8 +135,33 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 						<Label>
 							<Moon color="yellow" />
 						</Label>
-						<div className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background">
-							<MDXDiv text={responses} />
+						<div>
+							<Markdown
+								remarkPlugins={[remarkGfm]}
+								className="rounded-xl bg-zinc-900 p-2 border border-input ring-offset-background"
+								children={responses}
+								components={{
+									code(props) {
+										const { children, className, node, ...rest } = props;
+										const match = /language-(\w+)/.exec(className || "");
+										return match ? (
+											//@ts-ignore
+											<SyntaxHighlighter
+												{...rest}
+												wrapLongLines={true}
+												PreTag="div"
+												children={String(children).replace(/\n$/, "")}
+												language={match[1]}
+												style={dracula}
+											/>
+										) : (
+											<code {...rest} className={cn("font-space", className)}>
+												{String(children) || "Sedang memproses..."}
+											</code>
+										);
+									},
+								}}
+							/>
 						</div>
 					</div>
 				)}
