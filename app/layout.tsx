@@ -7,11 +7,14 @@ import { ThemeProvider } from "@/providers/theme-provider";
 import type { Viewport } from "next";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Inter } from "next/font/google";
+import { Inter as FontSans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+	subsets: ["latin"],
+	variable: "--font-sans",
+});
 
 export const viewport: Viewport = {
 	initialScale: 1,
@@ -61,8 +64,8 @@ export default async function RootLayout({
 			/>
 			<body
 				className={cn(
-					inter.className,
-					"min-h-screen bg-background antialiased",
+					"min-h-screen bg-background font-sans antialiased",
+					fontSans.variable,
 				)}
 			>
 				<QueryProvider>

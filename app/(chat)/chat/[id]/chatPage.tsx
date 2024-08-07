@@ -108,8 +108,8 @@ const ChatPage = ({ id }: { id: string }) => {
 													style={dracula}
 												/>
 											) : (
-												<code {...rest} className={className}>
-													{children}
+												<code {...rest} className={cn("font-space", className)}>
+													{String(children) || "Sedang memproses..."}
 												</code>
 											);
 										},
@@ -143,7 +143,7 @@ const ChatPage = ({ id }: { id: string }) => {
 												style={dracula}
 											/>
 										) : (
-											<code {...rest} className={className}>
+											<code {...rest} className={cn("font-space", className)}>
 												{children}
 											</code>
 										);
