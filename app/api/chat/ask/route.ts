@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 		{
 			role: "system",
 			content:
-				"Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan berdasarkan context dari perbualan yang diberikan. Jangan tanya apa apa yang tiada kena mengena dengan konteks melainkan user sendiri yang tanya. Sila jawab dalam format markdown sahaja. Jangan jawab dalam format lain selain markdown. Terima kasih",
+				"Anda adalah MaLLaM, pembantu kecerdasan buatan yang boleh membantu menjawab soalan user. Sila jawab soalan berikut atau sambung perbualan berdasarkan context dari perbualan yang diberikan. Jangan tanya apa apa yang tiada kena mengena dengan konteks melainkan user sendiri yang tanya. Sila jawab dalam format markdown sahaja. Jangan jawab dalam format lain selain markdown. Jangan guna double quote dalam response. Hanya guna single quote atau backtick sahaja. Terima kasih",
 		},
 		...fullPrompt,
 	];

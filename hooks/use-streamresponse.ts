@@ -7,6 +7,7 @@ import type {
 import { useState } from "react";
 
 function parsemalformedJSON(str: string): ChatCompletionResponse[] {
+	console.log("string before regex: ", str);
 	const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
 	const jsonObjects = str.match(regex);
 
@@ -15,8 +16,8 @@ function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 	}
 
 	return jsonObjects
-		.map((obj) => {
-			console.log(obj);
+		.map((obj, i) => {
+			console.log("string after regex: ", obj);
 			try {
 				const parsed = JSON.parse(obj) as ChatCompletionResponse;
 				return parsed;
@@ -24,8 +25,8 @@ function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 				console.error(`Failed to parse object: ${obj}`);
 				console.error(`Error: ${error}`);
 				return {
-					id: "err",
-					message: obj,
+					id: `err-${i}`,
+					message: " \n",
 				};
 			}
 		})
@@ -119,34 +120,30 @@ export const useStreamResponse = ({
 				{ role: "assistant", content: responses },
 			]);
 			const oldHistory = data?.history;
+
 			const newHistory: ChatCompletionMessageParam[] = [
-				{
-					role: "user",
-					content: data?.input as string,
-				},
-				{
-					role: "assistant",
-					content: responses,
-				},
+				JSON.parse(
+					JSON.stringify({
+						role: "user",
+						content: data?.input as string,
+					}),
+				),
+				JSON.parse(
+					JSON.stringify({
+						role: "assistant",
+						content: responses,
+					}),
+				),
 			];
 			const latestHistory = oldHistory?.concat(newHistory);
+
+			console.log("latestHistory: ", latestHistory);
 
 			if (!id || !latestHistory) {
 				return;
 			}
 
 			await updateChatHistory.mutateAsync({ latestHistory, id });
-			// console.log("latestHistory: ", latestHistory);
-			// await fetch("/api/chat/update", {
-			// 	method: "POST",
-			// 	headers: {
-			// 		"Content-Type": "application/json",
-			// 	},
-			// 	body: JSON.stringify({
-			// 		input: latestHistory,
-			// 		id,
-			// 	}),
-			// });
 		},
 	});
 	return { responses, startStream, isLoading };

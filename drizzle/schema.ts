@@ -3,12 +3,13 @@ import {
 	boolean,
 	integer,
 	json,
+	jsonb,
 	pgTable,
 	primaryKey,
 	text,
 	timestamp,
 } from "drizzle-orm/pg-core";
-import type { ChatCompletionResponse } from "mallam";
+import type { ChatCompletionMessageParam } from "mallam";
 import type { AdapterAccountType } from "next-auth/adapters";
 
 export const users = pgTable("user", {
@@ -93,12 +94,19 @@ export const chats = pgTable("chats", {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	title: text("title").notNull(),
-	contents: json("contents")
-		.$type<ChatCompletionResponse[]>()
-		.array()
-		.notNull(),
+	contents: json("contents").$type<ChatCompletionMessageParam[]>().notNull(),
 	user_id: text("user_id").notNull(),
-	created_at: timestamp("created_at").defaultNow(),
+	created_at: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const chats_new = pgTable("chats_new", {
+	id: text("id")
+		.primaryKey()
+		.$defaultFn(() => crypto.randomUUID()),
+	title: text("title").notNull(),
+	contents: jsonb("contents").$type<ChatCompletionMessageParam[]>().notNull(),
+	user_id: text("user_id").notNull(),
+	created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

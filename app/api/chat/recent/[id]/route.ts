@@ -1,5 +1,5 @@
 import { db } from "@/drizzle";
-import { chats } from "@/drizzle/schema";
+import { chats_new } from "@/drizzle/schema";
 import { desc, eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 
@@ -9,9 +9,9 @@ export async function GET(
 ) {
 	const res = await db
 		.select()
-		.from(chats)
-		.where(eq(chats.user_id, params.id))
-		.orderBy(desc(chats.created_at))
+		.from(chats_new)
+		.where(eq(chats_new.user_id, params.id))
+		.orderBy(desc(chats_new.created_at))
 		.limit(5);
 
 	// console.log(res);
