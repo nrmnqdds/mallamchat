@@ -8,7 +8,8 @@ import { useState } from "react";
 
 function parsemalformedJSON(str: string): ChatCompletionResponse[] {
 	console.log("string before regex: ", str);
-	const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
+	// const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
+	const regex = /\{[^}]+\}/g;
 	const jsonObjects = str.match(regex);
 
 	if (!jsonObjects) {
@@ -61,6 +62,9 @@ export const useStreamResponse = ({
 					id,
 				}),
 			});
+		},
+		onSuccess: () => {
+			setResponses("");
 		},
 	});
 
