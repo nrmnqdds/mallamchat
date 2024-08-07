@@ -3,15 +3,14 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "concurrently --raw \"next dev\" \"drizzle-kit studio\"",
+		"dev": "concurrently --raw \"rm -rf .next && next dev\" \"drizzle-kit studio\"",
 		"build": "next build",
 		"start": "next start",
-		"format": "biome format --write ./app ./components ./lib ./hooks ./providers",
-		"lint": "biome lint ./app ./components ./lib ./hooks ./providers",
+		"format": "biome format --write",
+		"lint": "biome lint",
 		"generate": "drizzle-kit generate",
 		"migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-		"studio": "drizzle-kit studio",
-		"clean": "rm -rf .next"
+		"studio": "drizzle-kit studio"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.4.1",

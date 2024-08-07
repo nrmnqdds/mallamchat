@@ -1,11 +1,13 @@
 "use client";
 
+import LOGO from "@/assets/images/mallamchatlogo1.svg";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import TextShimmer from "@/components/ui/text-shimmer";
 import { useInView } from "framer-motion";
 import { ArrowRightIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
@@ -27,9 +29,10 @@ export default function HeroSection() {
 					rel="noopener noreferer"
 					passHref
 				>
-					<TextShimmer className="inline-flex items-center justify-center">
+					<TextShimmer className="inline-flex items-center justify-center gap-2">
+						<Image src={LOGO} alt="MaLLaM" width={20} height={20} />
 						<span>
-							🌙 Introducing <span className="text-purple-400">MaLLaM</span>
+							Introducing <span className="text-purple-400">MaLLaM</span>
 						</span>{" "}
 						<ArrowRightIcon className="ml-1 size-3 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
 					</TextShimmer>
