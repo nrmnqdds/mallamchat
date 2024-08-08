@@ -7,31 +7,23 @@ import type {
 import { useState } from "react";
 
 function parsemalformedJSON(str: string): ChatCompletionResponse[] {
-	console.log("string before regex: ", str);
-	// const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
-	const regex = /\{[^}]+\}/g;
-	const jsonObjects = str.match(regex);
-
-	if (!jsonObjects) {
-		throw new Error("No valid JSON objects found in the string");
+	try {
+		// Directly attempt to parse the chunk as a valid JSON object.
+		const parsed = JSON.parse(str);
+		return [parsed];
+	} catch (e) {
+		// If parsing fails, attempt to handle concatenated JSON objects.
+		try {
+			// Separate concatenated JSON objects and parse them as an array.
+			const modifiedChunk = `[${str.replace(/}\s*{/g, "},{")}]`;
+			const parsedArray = JSON.parse(modifiedChunk);
+			return parsedArray;
+		} catch (error) {
+			console.error("Error parsing modified JSON:", error);
+			// Return an indication of an error or an empty array as appropriate.
+			return [];
+		}
 	}
-
-	return jsonObjects
-		.map((obj, i) => {
-			console.log("string after regex: ", obj);
-			try {
-				const parsed = JSON.parse(obj) as ChatCompletionResponse;
-				return parsed;
-			} catch (error) {
-				console.error(`Failed to parse object: ${obj}`);
-				console.error(`Error: ${error}`);
-				return {
-					id: `err-${i}`,
-					message: " \n",
-				};
-			}
-		})
-		.filter((obj): obj is ChatCompletionResponse => obj !== null);
 }
 
 export const useStreamResponse = ({
@@ -44,6 +36,8 @@ export const useStreamResponse = ({
 	id?: string;
 }) => {
 	const [responses, setResponses] = useState<string>("");
+	const [history, setHistory] = useState<ChatCompletionMessageParam[]>([]);
+	const [input, setInput] = useState<string>("");
 	const { toast } = useToast();
 
 	const updateChatHistory = useMutation({
@@ -73,6 +67,8 @@ export const useStreamResponse = ({
 			input,
 			history,
 		}: { input: string; history: ChatCompletionMessageParam[] }) => {
+			setHistory(history);
+			setInput(input);
 			const response = await fetch("/api/chat/ask", {
 				method: "POST",
 				headers: {
@@ -84,18 +80,24 @@ export const useStreamResponse = ({
 				}),
 			});
 
+			if (!response.ok) {
+				throw new Error("Failed to fetch response");
+			}
+
 			if (!response.body) {
 				throw new Error("ReadableStream not supported in this browser.");
 			}
 
-			const reader = response.body
-				.pipeThrough(new TextDecoderStream())
-				.getReader();
+			const res = response.body.pipeThrough(new TextDecoderStream());
 
-			return { reader, history, input };
+			if (!res) {
+				throw new Error("No response body");
+			}
+
+			return res;
 		},
-		onSuccess: async ({ reader }) => {
-			setResponses("");
+		onSuccess: async (res) => {
+			const reader = res.getReader();
 			while (true) {
 				const { value, done } = await reader.read();
 				if (done) {
@@ -118,18 +120,18 @@ export const useStreamResponse = ({
 					"Terdapat masalah semasa memuatkan soalan. Sila cuba lagi.",
 			});
 		},
-		onSettled: async (data) => {
+		onSettled: async () => {
 			streamCallback((prev) => [
 				...prev,
 				{ role: "assistant", content: responses },
 			]);
-			const oldHistory = data?.history;
+			// const oldHistory = data?.history;
 
 			const newHistory: ChatCompletionMessageParam[] = [
 				JSON.parse(
 					JSON.stringify({
 						role: "user",
-						content: data?.input as string,
+						content: input,
 					}),
 				),
 				JSON.parse(
@@ -139,9 +141,7 @@ export const useStreamResponse = ({
 					}),
 				),
 			];
-			const latestHistory = oldHistory?.concat(newHistory);
-
-			console.log("latestHistory: ", latestHistory);
+			const latestHistory = history?.concat(newHistory);
 
 			if (!id || !latestHistory) {
 				return;
