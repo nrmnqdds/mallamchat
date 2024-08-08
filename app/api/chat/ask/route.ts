@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 	const result = await mallam.chatCompletion(instruction, {
 		// model: "mallam-tiny",
 		stream: true,
-		max_tokens: 500,
+		max_tokens: 300,
 	});
 
 	return new NextResponse(result, {

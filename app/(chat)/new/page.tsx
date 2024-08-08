@@ -91,7 +91,7 @@ const Page = () => {
 		}
 	}, []);
 
-	const { mutateAsync } = useMutation({
+	const { mutateAsync, isPending } = useMutation({
 		mutationKey: ["new-chat"],
 		mutationFn: async (data: z.infer<typeof schema>) => {
 			const res = await fetch("/api/chat/new", {
@@ -163,6 +163,7 @@ const Page = () => {
 								placeholder="Apa yang boleh MaLLaM bantu anda hari ini?"
 								ref={inputRef}
 								value={form.watch("input")}
+								disabled={isPending}
 								onChange={(e) => {
 									form.setValue("input", e.target.value);
 								}}
