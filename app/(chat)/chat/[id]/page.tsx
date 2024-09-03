@@ -87,7 +87,7 @@ const ChatPage = ({ params }: { params: { id: string } }) => {
 							<div
 								key={index}
 								className={cn(
-									"w-[90%] flex gap-2",
+									"w-[90%] flex gap-2 text-wrap",
 									message.role === "user"
 										? "flex-row-reverse self-end"
 										: "flex-row self-start",

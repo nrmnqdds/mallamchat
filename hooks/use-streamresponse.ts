@@ -7,23 +7,31 @@ import type {
 import { useState } from "react";
 
 function parsemalformedJSON(str: string): ChatCompletionResponse[] {
-	try {
-		// Directly attempt to parse the chunk as a valid JSON object.
-		const parsed = JSON.parse(str);
-		return [parsed];
-	} catch (e) {
-		// If parsing fails, attempt to handle concatenated JSON objects.
-		try {
-			// Separate concatenated JSON objects and parse them as an array.
-			const modifiedChunk = `[${str.replace(/}\s*{/g, "},{")}]`;
-			const parsedArray = JSON.parse(modifiedChunk);
-			return parsedArray;
-		} catch (error) {
-			console.error("Error parsing modified JSON:", error);
-			// Return an indication of an error or an empty array as appropriate.
-			return [];
-		}
+	console.log("string before regex: ", str);
+	// const regex = /(\{(?:[^{}]|(?:\{(?:[^{}]|(?:\{[^{}]*\}))*\}))*\})/g;
+	const regex = /\{[^}]+\}/g;
+	const jsonObjects = str.match(regex);
+
+	if (!jsonObjects) {
+		throw new Error("No valid JSON objects found in the string");
 	}
+
+	return jsonObjects
+		.map((obj, i) => {
+			console.log("string after regex: ", obj);
+			try {
+				const parsed = JSON.parse(obj) as ChatCompletionResponse;
+				return parsed;
+			} catch (error) {
+				console.error(`Failed to parse object: ${obj}`);
+				console.error(`Error: ${error}`);
+				return {
+					id: `err-${i}`,
+					message: " \n",
+				};
+			}
+		})
+		.filter((obj): obj is ChatCompletionResponse => obj !== null);
 }
 
 export const useStreamResponse = ({
