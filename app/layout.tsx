@@ -61,7 +61,7 @@ export default async function RootLayout({
 			<Script
 				defer
 				src="https://umami.mallam.chat/getinfo"
-				data-website-id="eb05f1ec-536d-4f73-b9bc-f85f1a80b133"
+				data-website-id="17a27bab-f305-4797-ae80-8980038fdc00"
 			/>
 			<body
 				className={cn(
