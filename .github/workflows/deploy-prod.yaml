@@ -1,40 +1,33 @@
 name: Deploy Images to VPS
-
 on:
   push:
-    tags:
-      - "*"
+    branches:
+      - main
   workflow_dispatch:
-
 jobs:
   push-store-image:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: '.'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: nrmnqdds
           password: ${{ secrets.GHCR_TOKEN }}
-
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}
+          tags: ghcr.io/nrmnqdds/mallamchat-webapp:latest
           cache-from: type=registry,ref=ghcr.io/nrmnqdds/mallamchat:cache
           cache-to: type=registry,mode=max,ref=ghcr.io/nrmnqdds/mallamchat:cache,image-manifest=true
-
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -42,7 +35,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sed -i "/mallamchat-webapp:/,/mallamchat-webapp-beta:/ s|'ghcr.io/nrmnqdds/mallamchat-webapp:[^']*'|'ghcr.io/nrmnqdds/mallamchat-webapp:${{ github.ref_name }}'|" /home/ubuntu/docker-compose.yaml
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
-            docker compose up --force-recreate --build -d mallamchat-webapp
+            docker compose up --force-recreate --build -d mallamchat
             docker system prune -a -f
