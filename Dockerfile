@@ -13,7 +13,8 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm i --frozen-lockfile
+RUN pnpm fetch --prod
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Install sharp for image optimization
 RUN pnpm add sharp
