@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
 	console.log("input: ", input);
 
 	const session = await auth();
+  console.log("session: ", session);
 
 	const title = await mallam.chatCompletion(
 		[
