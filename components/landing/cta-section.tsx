@@ -136,13 +136,11 @@ export default function CallToActionSection() {
 							repeat={5}
 						>
 							{randomTiles1.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>
 						<Marquee reverse className="[--duration:25s]" repeat={5}>
 							{randomTiles2.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>
@@ -152,13 +150,11 @@ export default function CallToActionSection() {
 							repeat={5}
 						>
 							{randomTiles1.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>
 						<Marquee reverse className="[--duration:30s]" repeat={5}>
 							{randomTiles2.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>
@@ -168,13 +164,11 @@ export default function CallToActionSection() {
 							repeat={5}
 						>
 							{randomTiles3.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>
 						<Marquee reverse className="[--duration:30s]" repeat={5}>
 							{randomTiles4.map((review, idx) => (
-								// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 								<Card key={idx} {...review} />
 							))}
 						</Marquee>

@@ -199,7 +199,6 @@ export default function PricingSection() {
 									{/* biome-ignore lint/suspicious/noExplicitAny: <explanation> */}
 									{price.features.map((feature: any, idx: any) => (
 										<li
-											// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 											key={idx}
 											className="flex items-center gap-3 text-xs font-medium text-black dark:text-white"
 										>

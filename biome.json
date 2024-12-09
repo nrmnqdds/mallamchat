@@ -14,7 +14,7 @@
 				"noChildrenProp": "off"
 			}
 		},
-		"ignore": [".next", "node_modules"]
+		"ignore": [".next", "node_modules", "components/ui"]
 	},
 	"formatter": {
 		"enabled": true,

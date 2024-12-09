@@ -2,10 +2,7 @@ import { db } from "@/drizzle";
 import { chats_new } from "@/drizzle/schema";
 import { auth } from "@/lib/auth";
 import { mallam } from "@/lib/mallam";
-import type {
-	ChatCompletionMessageParam,
-	ChatCompletionResponse,
-} from "mallam";
+import type { ChatCompletionMessageParam } from "mallam";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +13,7 @@ export async function POST(request: NextRequest) {
 	console.log("input: ", input);
 
 	const session = await auth();
-  console.log("session: ", session);
+	console.log("session: ", session);
 
 	const title = await mallam.chatCompletion(
 		[
@@ -31,9 +28,12 @@ export async function POST(request: NextRequest) {
 			},
 		],
 		{
-			model: "mallam-tiny",
+			// model: "mallam-tiny",
+			stream: false,
 		},
 	);
+
+	console.log("title: ", title);
 
 	const newContent: ChatCompletionMessageParam[] = [
 		{
