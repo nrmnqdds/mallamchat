@@ -3,7 +3,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import Marquee from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion, useAnimation, useInView } from "motion/react";
 import {
 	BarChart,
 	ChevronRight,
@@ -77,7 +77,7 @@ function shuffleArray(array: any[]) {
 function Card(card: { icon: JSX.Element; bg: JSX.Element }) {
 	const id = useId();
 	const controls = useAnimation();
-	const ref = useRef(null);
+	const ref = useRef(Element.prototype);
 	const inView = useInView(ref, { once: true });
 
 	useEffect(() => {
@@ -92,6 +92,7 @@ function Card(card: { icon: JSX.Element; bg: JSX.Element }) {
 	return (
 		<motion.div
 			key={id}
+			// @ts-ignore
 			ref={ref}
 			initial={{ opacity: 0 }}
 			animate={controls}

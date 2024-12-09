@@ -4,7 +4,7 @@ import LOGO from "@/assets/images/mallamchatlogo1.svg";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
 import TextShimmer from "@/components/ui/text-shimmer";
-import { useInView } from "framer-motion";
+import { useInView } from "motion/react";
 import { ArrowRightIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 export default function HeroSection() {
-	const ref = useRef(null);
+	const ref = useRef(Element.prototype);
 	const inView = useInView(ref, { once: true, margin: "-100px" });
 	const { push } = useRouter();
 	const session = useSession();
@@ -54,6 +54,7 @@ export default function HeroSection() {
 				<ArrowRightIcon className="ml-1 size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
 			</Button>
 			<div
+				// @ts-ignore
 				ref={ref}
 				className="animate-fade-up relative mt-32 opacity-0 [--animation-delay:400ms] [perspective:2000px] after:absolute after:inset-0 after:z-50 after:[background:linear-gradient(to_top,hsl(var(--background))_30%,transparent)]"
 			>
