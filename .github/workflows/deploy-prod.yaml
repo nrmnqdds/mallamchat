@@ -36,5 +36,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             docker login ghcr.io -u nrmnqdds -p ${{ secrets.GHCR_TOKEN }}
+            docker compose pull mallamchat
             docker compose up --force-recreate --build -d mallamchat
             docker system prune -a -f
