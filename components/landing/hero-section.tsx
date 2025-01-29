@@ -1,5 +1,3 @@
-"use client";
-
 import LOGO from "@/assets/images/mallamchatlogo1.svg";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button } from "@/components/ui/button";
@@ -13,14 +11,14 @@ import { useRouter } from "next/navigation";
 import { useRef } from "react";
 
 export default function HeroSection() {
-	const ref = useRef(Element.prototype);
+	const ref = useRef(null);
 	const inView = useInView(ref, { once: true, margin: "-100px" });
 	const { push } = useRouter();
 	const session = useSession();
 	return (
 		<section
 			id="hero"
-			className="relative mx-auto mt-32 max-w-7xl px-6 text-center md:px-8"
+			className="relative mx-auto mt-32 max-w-7xl px-6 text-center md:px-8 bg-gradient-to-br from-black from-20% to-black/40 bg-clip-text"
 		>
 			<div className="backdrop-filter-[12px] animate-fade-in group inline-flex h-7 -translate-y-4 items-center justify-between gap-1 rounded-full border border-white/5 bg-white/10 px-3 text-xs text-white opacity-0 transition-all ease-in hover:cursor-pointer hover:bg-white/20 dark:text-black">
 				<Link

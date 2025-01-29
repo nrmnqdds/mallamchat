@@ -1,9 +1,33 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/libsql/web";
+import { createClient } from "@libsql/client/web";
 import * as schema from "./schema";
 
-const client = postgres(process.env.DATABASE_URL, {
-	connect_timeout: 10,
-});
+export const db = () => {
+	console.log(process.env);
 
-export const db = drizzle(client, { schema });
+	const url = process.env.DATABASE_URL?.trim();
+	if (url === undefined) {
+		throw new Error("DATABASE_URL is not defined", url);
+	}
+
+	const authToken = process.env.DATABASE_AUTH_TOKEN?.trim();
+	if (authToken === undefined) {
+		throw new Error("DATABASE_AUTH_TOKEN is not defined");
+	}
+
+	return drizzle(
+		createClient({
+			url,
+			authToken,
+		}),
+		{ schema },
+	);
+};
+
+// const client = () =>
+// 	createClient({
+// 		url: process.env.DATABASE_URL,
+// 		authToken: process.env.DATABASE_AUTH_TOKEN,
+// 	});
+
+// export const db = drizzle(client, { schema, logger: true });

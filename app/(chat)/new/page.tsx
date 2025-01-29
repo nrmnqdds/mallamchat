@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useCallback } from "react";
 
 const schema = z.object({
 	input: z.string().min(1, { message: "Sila masukkan soalan anda" }),
@@ -120,13 +121,16 @@ const Page = () => {
 		},
 	});
 
-	const onSubmit = async (data: z.infer<typeof schema>) => {
-		if (!session.data?.user) {
-			signIn("google");
-		}
-		createChat(data.input);
-		await mutateAsync(data);
-	};
+	const onSubmit = useCallback(
+		async (data: z.infer<typeof schema>) => {
+			if (!session.data?.user) {
+				signIn("google");
+			}
+			createChat(data.input);
+			await mutateAsync(data);
+		},
+		[session.data?.user, createChat, mutateAsync],
+	);
 
 	return (
 		<div className="w-full flex flex-col items-center justify-center">

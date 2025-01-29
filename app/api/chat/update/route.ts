@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
 	console.log("update input: ", body.input);
 
-	await db
+	await db()
 		.update(chats_new)
 		.set({
 			contents: body.input,

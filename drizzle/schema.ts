@@ -1,34 +1,30 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
-	boolean,
 	integer,
-	json,
-	jsonb,
-	pgTable,
+	sqliteTable,
 	primaryKey,
 	text,
-	timestamp,
-} from "drizzle-orm/pg-core";
+	blob,
+} from "drizzle-orm/sqlite-core";
 import type { ChatCompletionMessageParam } from "mallam";
-import type { AdapterAccountType } from "next-auth/adapters";
+import type { AdapterAccount } from "next-auth/adapters";
 
-export const users = pgTable("user", {
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
+export const users = sqliteTable("user", {
+	id: text("id").notNull().primaryKey(),
 	name: text("name"),
-	email: text("email").notNull(),
-	emailVerified: timestamp("emailVerified", { mode: "date" }),
+	email: text("email"),
+	emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
 	image: text("image"),
+	password: text("password"),
 });
 
-export const accounts = pgTable(
+export const accounts = sqliteTable(
 	"account",
 	{
 		userId: text("userId")
 			.notNull()
 			.references(() => users.id, { onDelete: "cascade" }),
-		type: text("type").$type<AdapterAccountType>().notNull(),
+		type: text("type").$type<AdapterAccount["type"]>().notNull(),
 		provider: text("provider").notNull(),
 		providerAccountId: text("providerAccountId").notNull(),
 		refresh_token: text("refresh_token"),
@@ -39,74 +35,59 @@ export const accounts = pgTable(
 		id_token: text("id_token"),
 		session_state: text("session_state"),
 	},
-	(account) => ({
-		compoundKey: primaryKey({
-			columns: [account.provider, account.providerAccountId],
-		}),
-	}),
+	(account) => [
+		primaryKey({ columns: [account.provider, account.providerAccountId] }),
+	],
+	// (account) => ({
+	// 	compoundKey: primaryKey({
+	// 		columns: [account.provider, account.providerAccountId],
+	// 	}),
+	// }),
 );
 
-export const sessions = pgTable("session", {
-	sessionToken: text("sessionToken").primaryKey(),
+export const sessions = sqliteTable("session", {
+	sessionToken: text("sessionToken").notNull().primaryKey(),
 	userId: text("userId")
 		.notNull()
 		.references(() => users.id, { onDelete: "cascade" }),
-	expires: timestamp("expires", { mode: "date" }).notNull(),
+	expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 });
 
-export const verificationTokens = pgTable(
+export const verificationTokens = sqliteTable(
 	"verificationToken",
 	{
 		identifier: text("identifier").notNull(),
 		token: text("token").notNull(),
-		expires: timestamp("expires", { mode: "date" }).notNull(),
+		expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 	},
-	(verificationToken) => ({
-		compositePk: primaryKey({
-			columns: [verificationToken.identifier, verificationToken.token],
-		}),
-	}),
+	(vt) => [primaryKey({ columns: [vt.identifier, vt.token] })],
+	// (vt) => ({
+	// 	compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
+	// }),
 );
 
-export const authenticators = pgTable(
-	"authenticator",
-	{
-		credentialID: text("credentialID").notNull().unique(),
-		userId: text("userId")
-			.notNull()
-			.references(() => users.id, { onDelete: "cascade" }),
-		providerAccountId: text("providerAccountId").notNull(),
-		credentialPublicKey: text("credentialPublicKey").notNull(),
-		counter: integer("counter").notNull(),
-		credentialDeviceType: text("credentialDeviceType").notNull(),
-		credentialBackedUp: boolean("credentialBackedUp").notNull(),
-		transports: text("transports"),
-	},
-	(authenticator) => ({
-		compositePK: primaryKey({
-			columns: [authenticator.userId, authenticator.credentialID],
-		}),
-	}),
-);
-
-export const chats = pgTable("chats", {
+export const chats = sqliteTable("chats", {
 	id: text("id")
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	title: text("title").notNull(),
-	contents: json("contents").$type<ChatCompletionMessageParam[]>().notNull(),
+	contents: text("contents", { mode: "json" })
+		.$type<ChatCompletionMessageParam[]>()
+		.notNull(),
 	user_id: text("user_id").notNull(),
-	created_at: timestamp("created_at").notNull().defaultNow(),
+	created_at: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
-export const chats_new = pgTable("chats_new", {
+export const chats_new = sqliteTable("chats_new", {
 	id: text("id")
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	title: text("title").notNull(),
-	contents: jsonb("contents").$type<ChatCompletionMessageParam[]>().notNull(),
+	contents: blob("contents", { mode: "json" })
+		.$type<ChatCompletionMessageParam[]>()
+		.notNull(),
 	user_id: text("user_id").notNull(),
-	created_at: timestamp("created_at").notNull().defaultNow(),
+	created_at: text("created_at").notNull().default(sql`(current_timestamp)`),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

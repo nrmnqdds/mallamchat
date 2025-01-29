@@ -2,9 +2,6 @@ import { mallam } from "@/lib/mallam";
 import type { ChatCompletionMessageParam } from "mallam";
 import { type NextRequest, NextResponse } from "next/server";
 
-export const runtime = "edge";
-export const dynamic = "force-dynamic";
-
 export async function POST(request: NextRequest) {
 	const { input, history } = await request.json();
 

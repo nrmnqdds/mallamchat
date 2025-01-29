@@ -14,7 +14,7 @@ import {
 	Shield,
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { type JSX, useEffect, useId, useRef, useState } from "react";
 
 const tiles = [
 	{

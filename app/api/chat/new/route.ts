@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
 	if (session?.user?.id) {
 		// Insert the chat into the database
-		const res = await db
+		const res = await db()
 			.insert(chats_new)
 			.values({
 				title: title.message.trim(),

@@ -8,12 +8,10 @@ const envVariables = z.object({
 
 	// Database
 	DATABASE_URL: z.string(),
+	DATABASE_AUTH_TOKEN: z.string(),
 
 	// Mallam API
 	MALLAM_API_KEY: z.string(),
-
-	// Posthog
-	NEXT_PUBLIC_POSTHOG_KEY: z.string(),
 });
 
 envVariables.parse(process.env);

@@ -9,7 +9,7 @@ export async function GET(
 ) {
 	const routeID = (await params).id;
 
-	const res = await db
+	const res = await db()
 		.select()
 		.from(chats_new)
 		.where(eq(chats_new.id, routeID))

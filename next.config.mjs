@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	// For docker purpose
-	output: "standalone",
+	// output: "standalone",
 
 	// Configure `pageExtensions` to include MDX files
 	pageExtensions: ["js", "jsx", "mdx", "ts", "tsx"],
