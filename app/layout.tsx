@@ -8,7 +8,6 @@ import type { Viewport } from "next";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter as FontSans } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import TopBanner from "@/components/top-banner";
 
@@ -58,11 +57,6 @@ export default async function RootLayout({
 
 	return (
 		<html lang="en" suppressHydrationWarning>
-			<Script
-				defer
-				src="https://umami.mallam.chat/getinfo"
-				data-website-id="17a27bab-f305-4797-ae80-8980038fdc00"
-			/>
 			<body
 				className={cn(
 					"min-h-screen bg-background font-sans antialiased",
