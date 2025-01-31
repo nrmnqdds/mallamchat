@@ -9,14 +9,14 @@ import { useInitChatStore } from "@/hooks/use-initchat";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { motion } from "motion/react";
 import { Send } from "lucide-react";
+import { motion } from "motion/react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useCallback } from "react";
 
 const schema = z.object({
 	input: z.string().min(1, { message: "Sila masukkan soalan anda" }),

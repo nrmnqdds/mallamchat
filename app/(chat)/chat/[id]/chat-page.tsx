@@ -28,7 +28,7 @@ const ChatPage = ({ pageID }: { pageID: string }) => {
 	const inputRef = useRef<HTMLTextAreaElement>(null);
 
 	useQuery({
-		queryKey: ["init-chat"],
+		queryKey: ["init-chat", pageID],
 		queryFn: async () => {
 			const res = await fetch(`/api/chat/${pageID}`);
 			const json = await res.json();
@@ -117,7 +117,6 @@ const ChatPage = ({ pageID }: { pageID: string }) => {
 														style={dracula}
 													/>
 												) : (
-													// @ts-ignore
 													<code
 														{...rest}
 														className={cn("font-space", className)}
@@ -157,7 +156,6 @@ const ChatPage = ({ pageID }: { pageID: string }) => {
 												style={dracula}
 											/>
 										) : (
-											// @ts-ignore
 											<code {...rest} className={cn("font-space", className)}>
 												{String(children) || "Sedang memproses..."}
 											</code>
