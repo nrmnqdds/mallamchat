@@ -19,8 +19,7 @@ const TopBanner = () => {
 					</p>
 				)}
 			<p className="font-bold">
-				🚧 Still in active rapid development. Please expect bugs and missing
-				features. 🚧
+				App is no longer active due to MaLLaM API is down.
 			</p>
 		</div>
 	);
